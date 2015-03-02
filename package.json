@@ -1,0 +1,19 @@
+{
+  "name": "rpc-tests",
+  "version": "0.0.1",
+  "description": "Test suite for the ethreum node RPC interface.",
+  "author": "Fabian Vogelsteller <fabian@frozeman.de>",
+  "main": "index",
+  "engines": {
+    "node": ">= 0.4.x < 0.8.0"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "*",
+    "w3c-xmlhttprequest": "*",
+    "mocha": ">= 0.11.0"
+  }
+}
