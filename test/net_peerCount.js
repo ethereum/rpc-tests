@@ -2,7 +2,7 @@ var config = require('../lib/config'),
     Helpers = require('../lib/helpers'),
     assert = require('chai').assert;
 
-var method = 'net_listening';
+var method = 'net_peerCount';
 
 // TEST
 var asyncTest = function(host, done){
@@ -16,18 +16,16 @@ var asyncTest = function(host, done){
         
         assert.equal(status, 200);
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
-        assert.isBoolean(result.result);
+        assert.isNumber(+result.result);
 
         done();
-
     });
 };
-
 
 describe(method, function(){
     for (var key in config.hosts) {
         describe(key.toUpperCase(), function(){
-            it('should return a boolean', function(done){
+            it('should return a return a number', function(done){
                 asyncTest(config.hosts[key], done);
             });
         });

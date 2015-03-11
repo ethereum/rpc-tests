@@ -2,7 +2,7 @@ var config = require('../lib/config'),
     Helpers = require('../lib/helpers'),
     assert = require('chai').assert;
 
-var method = 'net_listening';
+var method = 'eth_mining';
 
 // TEST
 var asyncTest = function(host, done){
