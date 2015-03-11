@@ -3,18 +3,16 @@ var config = require('../lib/config'),
     assert = require('chai').assert;
 
 // METHOD
-var method = 'eth_getBalance';
+var method = 'eth_newBlockFilter';
 
-// TODO check fo balance
-// TODO TEST for specific states (blocks) and pending?
 
 // TEST
-var asyncTest = function(host, done){
+var asyncTest = function(host, done, param){
     Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
         
         // PARAMETERS
-        params: ['0x'+ config.testBlocks.SimpleTx.genesisBlockHeader.coinbase, 'latest']
+        params: [param]
 
     }, function(result, status) {
 
@@ -25,19 +23,17 @@ var asyncTest = function(host, done){
         assert.match(result.result, /^0x/, 'is hex');
         assert.isNumber(+result.result, 'can be converted to a number');
 
-        assert.equal(+result.result, 0, 'should have balance');
-
         done();
     });
 };
 
 
-var asyncErrorTest = function(host, done){
+var asyncErrorTest = function(host, done, param){
     Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
         
         // PARAMETERS
-        params: []
+        params: param ? [param] : []
 
     }, function(result, status) {
 
@@ -53,16 +49,30 @@ var asyncErrorTest = function(host, done){
 
 describe(method, function(){
 
-
     for (var key in config.hosts) {
         describe(key.toUpperCase(), function(){
-            it('should return a number as hexstring', function(done){
-                asyncTest(config.hosts[key], done);
+            it('should return a number as hexstring when passing "latest"', function(done){
+                asyncTest(config.hosts[key], done, 'latest');
+            });
+        });
+        describe(key.toUpperCase(), function(){
+            it('should return a number as hexstring when passing "pending"', function(done){
+                asyncTest(config.hosts[key], done, 'pending');
             });
         });
         describe(key.toUpperCase(), function(){
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(config.hosts[key], done);
+            });
+        });
+        describe(key.toUpperCase(), function(){
+            it('should return an error when a wrong parameter is passed', function(done){
+                asyncErrorTest(config.hosts[key], done, 'something');
+            });
+        });
+        describe(key.toUpperCase(), function(){
+            it('should return an error when a wrong parameter is passed', function(done){
+                asyncErrorTest(config.hosts[key], done, 23);
             });
         });
     }

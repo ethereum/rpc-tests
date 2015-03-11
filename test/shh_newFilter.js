@@ -3,21 +3,18 @@ var config = require('../lib/config'),
     assert = require('chai').assert;
 
 // METHOD
-var method = 'eth_getBalance';
+var method = 'shh_newFilter';
 
-// TODO check fo balance
-// TODO TEST for specific states (blocks) and pending?
 
 // TEST
-var asyncTest = function(host, done){
+var asyncTest = function(host, done, param){
     Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
         
         // PARAMETERS
-        params: ['0x'+ config.testBlocks.SimpleTx.genesisBlockHeader.coinbase, 'latest']
+        params: [param]
 
     }, function(result, status) {
-
         
         assert.equal(status, 200, 'has status code');
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
@@ -25,19 +22,17 @@ var asyncTest = function(host, done){
         assert.match(result.result, /^0x/, 'is hex');
         assert.isNumber(+result.result, 'can be converted to a number');
 
-        assert.equal(+result.result, 0, 'should have balance');
-
         done();
     });
 };
 
 
-var asyncErrorTest = function(host, done){
+var asyncErrorTest = function(host, done, param){
     Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
         
         // PARAMETERS
-        params: []
+        params: param ? [param] : []
 
     }, function(result, status) {
 
@@ -56,8 +51,25 @@ describe(method, function(){
 
     for (var key in config.hosts) {
         describe(key.toUpperCase(), function(){
-            it('should return a number as hexstring', function(done){
-                asyncTest(config.hosts[key], done);
+            it('should return a number as hexstring when all options are passed', function(done){
+                asyncTest(config.hosts[key], done, {
+                    "topics": ['0x6aa910a7186fdf'],
+                    "to": "0xfd9801e0aa27e54970936aa910a7186fdf5549bc"
+                });
+            });
+        });
+        describe(key.toUpperCase(), function(){
+            it('should return a number as hexstring when a few options are passed', function(done){
+                asyncTest(config.hosts[key], done, {
+                    "topics": ['0x6aa910a7186fdf']
+                });
+            });
+        });
+        describe(key.toUpperCase(), function(){
+            it('should return an error when a wrong parameter is passed', function(done){
+                asyncErrorTest(config.hosts[key], done, {
+                    "to": 2,
+                });
             });
         });
         describe(key.toUpperCase(), function(){
