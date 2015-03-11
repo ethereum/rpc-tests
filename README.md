@@ -5,8 +5,9 @@
 
 ## Usage
 
-1. `npm install .`
-2. `make test`
+1. `$ npm install .`
+2. start a local CPP node at localhost:8080 and local GO node localhost:8545
+3. `$ make test`
 
 ## License
 

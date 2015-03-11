@@ -3,7 +3,7 @@ var config = require('../lib/config'),
     assert = require('chai').assert;
 
 // METHOD
-var method = 'eth_gasPrice';
+var method = 'eth_getBalance';
 
 // TEST
 var asyncTest = function(host, done){
@@ -11,9 +11,10 @@ var asyncTest = function(host, done){
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
         
         // PARAMETERS
-        params: []
+        params: ['0x'+ config.testBlocks.SimpleTx.genesisBlockHeader.coinbase, 'latest']
 
     }, function(result, status) {
+
         
         assert.equal(status, 200, 'has status code');
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
@@ -25,11 +26,38 @@ var asyncTest = function(host, done){
     });
 };
 
+
+var asyncErrorTest = function(host, done){
+    Helpers.send(host, {
+        id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
+        
+        // PARAMETERS
+        params: []
+
+    }, function(result, status) {
+
+        assert.equal(status, 200, 'has status code');
+        assert.property(result, 'error');
+        assert.equal(result.error.code, -32602);
+
+        done();
+    });
+};
+
+
+
 describe(method, function(){
+
+
     for (var key in config.hosts) {
         describe(key.toUpperCase(), function(){
             it('should return a number as hexstring', function(done){
                 asyncTest(config.hosts[key], done);
+            });
+        });
+        describe(key.toUpperCase(), function(){
+            it('should return an error when no parameter is passed', function(done){
+                asyncErrorTest(config.hosts[key], done);
             });
         });
     }

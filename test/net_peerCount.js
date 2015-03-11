@@ -2,14 +2,15 @@ var config = require('../lib/config'),
     Helpers = require('../lib/helpers'),
     assert = require('chai').assert;
 
+// METHOD
 var method = 'net_peerCount';
 
 // TEST
 var asyncTest = function(host, done){
     Helpers.send(host, {
-        id: config.rpcMessageId++,
-        jsonrpc: "2.0",
-        method: method,
+        id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
+        
+        // PARAMETERS
         params: []
 
     }, function(result, status) {
