@@ -13,7 +13,7 @@
   "dependencies": {},
   "devDependencies": {
     "chai": "*",
-    "w3c-xmlhttprequest": "*",
+    "xmlhttprequest": "*",
     "mocha": ">= 0.11.0"
   }
 }
