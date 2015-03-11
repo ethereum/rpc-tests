@@ -2,7 +2,7 @@ var config = require('../lib/config'),
     Helpers = require('../lib/helpers'),
     assert = require('chai').assert;
 
-var method = 'net_peerCount';
+var method = 'eth_gasPrice';
 
 // TEST
 var asyncTest = function(host, done){

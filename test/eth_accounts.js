@@ -2,7 +2,7 @@ var config = require('../lib/config'),
     Helpers = require('../lib/helpers'),
     assert = require('chai').assert;
 
-var method = 'net_peerCount';
+var method = 'eth_accounts';
 
 // TEST
 var asyncTest = function(host, done){
@@ -16,9 +16,8 @@ var asyncTest = function(host, done){
         
         assert.equal(status, 200, 'has status code');
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
-        assert.isString(result.result, 'is string');
-        assert.match(result.result, /^0x/, 'is hex');
-        assert.isNumber(+result.result, 'can be converted to a number');
+        assert.isArray(result.result, 'is array');
+        assert.isTrue(Helpers.isAddress(result.result[0]));
 
         done();
     });
@@ -27,7 +26,7 @@ var asyncTest = function(host, done){
 describe(method, function(){
     for (var key in config.hosts) {
         describe(key.toUpperCase(), function(){
-            it('should return a number as hexstring', function(done){
+            it('should return an array with accounts', function(done){
                 asyncTest(config.hosts[key], done);
             });
         });

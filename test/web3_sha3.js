@@ -31,7 +31,7 @@ var asyncErrorTest = function(host, done){
 
     }, function(result, status) {
 
-        assert.equal(status, 200);
+        assert.equal(status, 200, 'has status code');
         assert.property(result, 'error');
         assert.equal(result.error.code, -32602);
 
