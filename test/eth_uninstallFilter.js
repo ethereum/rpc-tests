@@ -45,47 +45,47 @@ var asyncErrorTest = function(host, done, param){
 
 
 describe(method, function(){
-    for (var key in config.hosts) {
+    Helpers.each(function(key, host){
 
-        // BLOCK FILTER
-        describe(key.toUpperCase(), function(){
-            // INSTALL a block filter first
-            var blockFilterId = Helpers.send(config.hosts.cpp, {
-                id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newBlockFilter',
-                
-                // PARAMETERS
-                params: ['latest']
+        describe(key, function(){
 
-            });
-
+            // BLOCK FILTER
             it('should return a boolean when uninstalling a block filter', function(done){
-                asyncTest(config.hosts[key], done, blockFilterId.result);
-            });
-        });
-        // OPTIONS FILTER
-        describe(key.toUpperCase(), function(){
-            // INSTALL a options filter first
-            var optionsFilterId = Helpers.send(config.hosts.cpp, {
-                id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
-                
-                // PARAMETERS
-                params: [{
-                    "fromBlock": "0x1", // 1
-                    "toBlock": "0x2", // 2
-                    "address": "0xfd9801e0aa27e54970936aa910a7186fdf5549bc",
-                    "topics": ['0x01e0aa27e54970936aa910a71', '0x6aa910a7186fdf']
-                }]
+                // INSTALL a block filter first
+                var blockFilterId = Helpers.send(host, {
+                    id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newBlockFilter',
+                    
+                    // PARAMETERS
+                    params: ['latest']
 
+                });
+
+                asyncTest(host, done, blockFilterId.result);
             });
 
+
+            // OPTIONS FILTER
             it('should return a boolean when uninstalling a options filter', function(done){
-                asyncTest(config.hosts[key], done, optionsFilterId.result);
+                // INSTALL a options filter first
+                var optionsFilterId = Helpers.send(host, {
+                    id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
+                    
+                    // PARAMETERS
+                    params: [{
+                        "fromBlock": "0x1", // 1
+                        "toBlock": "0x2", // 2
+                        "address": "0xfd9801e0aa27e54970936aa910a7186fdf5549bc",
+                        "topics": ['0x01e0aa27e54970936aa910a71', '0x6aa910a7186fdf']
+                    }]
+
+                });
+
+                asyncTest(host, done, optionsFilterId.result);
             });
-        });
-        describe(key.toUpperCase(), function(){
+
             it('should return an error when no parameter is passed', function(done){
-                asyncErrorTest(config.hosts[key], done);
+                asyncErrorTest(host, done);
             });
         });
-    }
+    });
 });

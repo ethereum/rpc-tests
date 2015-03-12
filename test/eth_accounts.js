@@ -14,7 +14,6 @@ var asyncTest = function(host, done){
         params: []
 
     }, function(result, status) {
-        
         assert.equal(status, 200, 'has status code');
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
         assert.isArray(result.result, 'is array');
@@ -24,12 +23,14 @@ var asyncTest = function(host, done){
     });
 };
 
+
 describe(method, function(){
-    for (var key in config.hosts) {
-        describe(key.toUpperCase(), function(){
+    Helpers.each(function(key, host){
+        describe(key, function(){
             it('should return an array with accounts', function(done){
-                asyncTest(config.hosts[key], done);
+                asyncTest(host, done);
             });
         });
-    }
+    });
 });
+

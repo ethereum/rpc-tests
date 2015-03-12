@@ -1,6 +1,7 @@
 var config = require('../lib/config'),
     Helpers = require('../lib/helpers'),
-    assert = require('chai').assert;
+    assert = require('chai').assert,
+    currentFilterId = null;
 
 // METHOD
 var method = 'eth_newBlockFilter';
@@ -22,6 +23,8 @@ var asyncTest = function(host, done, param){
         assert.isString(result.result, 'is string');
         assert.match(result.result, /^0x/, 'is hex');
         assert.isNumber(+result.result, 'can be converted to a number');
+
+        currentFilterId = result.result;
 
         done();
     });
@@ -49,31 +52,41 @@ var asyncErrorTest = function(host, done, param){
 
 describe(method, function(){
 
-    for (var key in config.hosts) {
-        describe(key.toUpperCase(), function(){
+    Helpers.each(function(key, host){
+        describe(key, function(){
+            // uninstall the filters after we are done
+            afterEach(function(){
+                if(currentFilterId) {
+                    Helpers.send(host, {
+                        id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_uninstallFilter',
+                        
+                        // PARAMETERS
+                        params: [currentFilterId]
+
+                    });
+                    currentFilterId = null;
+                }
+            });
+
             it('should return a number as hexstring when passing "latest"', function(done){
-                asyncTest(config.hosts[key], done, 'latest');
+                asyncTest(host, done, 'latest');
             });
-        });
-        describe(key.toUpperCase(), function(){
+
             it('should return a number as hexstring when passing "pending"', function(done){
-                asyncTest(config.hosts[key], done, 'pending');
+                asyncTest(host, done, 'pending');
             });
-        });
-        describe(key.toUpperCase(), function(){
+
             it('should return an error when no parameter is passed', function(done){
-                asyncErrorTest(config.hosts[key], done);
+                asyncErrorTest(host, done);
             });
-        });
-        describe(key.toUpperCase(), function(){
+
             it('should return an error when a wrong parameter is passed', function(done){
-                asyncErrorTest(config.hosts[key], done, 'something');
+                asyncErrorTest(host, done, 'something');
             });
-        });
-        describe(key.toUpperCase(), function(){
+
             it('should return an error when a wrong parameter is passed', function(done){
-                asyncErrorTest(config.hosts[key], done, 23);
+                asyncErrorTest(host, done, 23);
             });
         });
-    }
+    });
 });

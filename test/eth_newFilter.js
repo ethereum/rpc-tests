@@ -1,6 +1,7 @@
 var config = require('../lib/config'),
     Helpers = require('../lib/helpers'),
-    assert = require('chai').assert;
+    assert = require('chai').assert,
+    currentFilterId = null;
 
 // METHOD
 var method = 'eth_newFilter';
@@ -21,6 +22,9 @@ var asyncTest = function(host, done, param){
         assert.isString(result.result, 'is string');
         assert.match(result.result, /^0x/, 'is hex');
         assert.isNumber(+result.result, 'can be converted to a number');
+
+        // set current filter id
+        currentFilterId = result.result;
 
         done();
     });
@@ -48,39 +52,50 @@ var asyncErrorTest = function(host, done, param){
 
 describe(method, function(){
 
+    Helpers.each(function(key, host){
+        describe(key, function(){
 
-    for (var key in config.hosts) {
-        describe(key.toUpperCase(), function(){
+            // uninstall the filters after we are done
+            afterEach(function(){
+                if(currentFilterId) {
+                    Helpers.send(host, {
+                        id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_uninstallFilter',
+                        
+                        // PARAMETERS
+                        params: [currentFilterId]
+
+                    });
+                    currentFilterId = null;
+                }
+            });
+
             it('should return a number as hexstring when all options are passed', function(done){
-                asyncTest(config.hosts[key], done, {
+                asyncTest(host, done, {
                     "fromBlock": "0x1", // 1
                     "toBlock": "0x2", // 2
                     "address": "0xfd9801e0aa27e54970936aa910a7186fdf5549bc",
                     "topics": ['0x01e0aa27e54970936aa910a71', '0x6aa910a7186fdf']
                 });
             });
-        });
-        describe(key.toUpperCase(), function(){
+
             it('should return a number as hexstring when a few options are passed', function(done){
-                asyncTest(config.hosts[key], done, {
+                asyncTest(host, done, {
                     "fromBlock": "0x1", // 1
                     "toBlock": "0x2", // 2
                 });
             });
-        });
-        describe(key.toUpperCase(), function(){
+
             it('should return an error when a wrong parameter is passed', function(done){
-                asyncErrorTest(config.hosts[key], done, {
+                asyncErrorTest(host, done, {
                     "fromBlock": 2,
                     "toBlock": 2,
                     "address": "0xfd9801e0aa27e54970936aa910a7186fdf5549bc"
                 });
             });
-        });
-        describe(key.toUpperCase(), function(){
+
             it('should return an error when no parameter is passed', function(done){
-                asyncErrorTest(config.hosts[key], done);
+                asyncErrorTest(host, done);
             });
         });
-    }
+    });
 });

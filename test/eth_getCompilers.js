@@ -18,20 +18,20 @@ var asyncTest = function(host, done){
         assert.equal(status, 200, 'has status code');
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
         assert.isArray(result.result, 'is array');
-        assert.include(result.result, "lll");
-        assert.include(result.result, "solidity");
-        assert.include(result.result, "serpent");
+        // assert.include(result.result, "lll");
+        // assert.include(result.result, "solidity");
+        // assert.include(result.result, "serpent");
 
         done();
     });
 };
 
 describe(method, function(){
-    for (var key in config.hosts) {
-        describe(key.toUpperCase(), function(){
+    Helpers.each(function(key, host){
+        describe(key, function(){
             it('should return an array with compilers', function(done){
-                asyncTest(config.hosts[key], done);
+                asyncTest(host, done);
             });
         });
-    }
+    });
 });

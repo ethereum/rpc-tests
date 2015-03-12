@@ -45,30 +45,29 @@ var asyncErrorTest = function(host, done, param){
 
 
 describe(method, function(){
-    for (var key in config.hosts) {
+    Helpers.each(function(key, host){
 
         // OPTIONS FILTER
-        describe(key.toUpperCase(), function(){
-            // INSTALL a options filter first
-            var optionsFilterId = Helpers.send(config.hosts.cpp, {
-                id: config.rpcMessageId++, jsonrpc: "2.0", method: 'shh_newFilter',
-                
-                // PARAMETERS
-                params: [{
-                    "to": "0xfd9801e0aa27e54970936aa910a7186fdf5549bc",
-                    "topics": ['0x01e0aa27e54970936aa910a71', '0x6aa910a7186fdf']
-                }]
-
-            });
+        describe(key, function(){
 
             it('should return a boolean when uninstalling a options filter', function(done){
-                asyncTest(config.hosts[key], done, optionsFilterId.result);
+                // INSTALL a options filter first
+                var optionsFilterId = Helpers.send(host, {
+                    id: config.rpcMessageId++, jsonrpc: "2.0", method: 'shh_newFilter',
+                    
+                    // PARAMETERS
+                    params: [{
+                        "to": "0xfd9801e0aa27e54970936aa910a7186fdf5549bc",
+                        "topics": ['0x01e0aa27e54970936aa910a71', '0x6aa910a7186fdf']
+                    }]
+
+                });
+                asyncTest(host, done, optionsFilterId.result);
             });
-        });
-        describe(key.toUpperCase(), function(){
+
             it('should return an error when no parameter is passed', function(done){
-                asyncErrorTest(config.hosts[key], done);
+                asyncErrorTest(host, done);
             });
         });
-    }
+    });
 });

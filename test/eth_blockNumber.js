@@ -26,11 +26,11 @@ var asyncTest = function(host, done){
 };
 
 describe(method, function(){
-    for (var key in config.hosts) {
-        describe(key.toUpperCase(), function(){
+    Helpers.each(function(key, host){
+        describe(key, function(){
             it('should return a number as hexstring', function(done){
-                asyncTest(config.hosts[key], done);
+                asyncTest(host, done);
             });
         });
-    }
+    });
 });

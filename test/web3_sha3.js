@@ -41,16 +41,15 @@ var asyncErrorTest = function(host, done){
 };
 
 describe(method, function(){
-    for (var key in config.hosts) {
-        describe(key.toUpperCase(), function(){
+    Helpers.each(function(key, host){
+        describe(key, function(){
             it('should return a generated hash', function(done){
-                asyncTest(config.hosts[key], done);
+                asyncTest(host, done);
             });
-        });
-        describe(key.toUpperCase(), function(){
+
             it('should return an error when no parameter is passed', function(done){
-                asyncErrorTest(config.hosts[key], done);
+                asyncErrorTest(host, done);
             });
         });
-    }
+    });
 });
