@@ -5,9 +5,10 @@
 
 ## Usage
 
-1. `$ npm install .`
-2. start a local CPP node at `http://localhost:8080` and local GO node at `http://localhost:8545`
-3. run `$ npm test`
+1. `$ cd rpc-tests`
+2. `$ npm install`
+3. start a local CPP node at `http://localhost:8080` and local GO node at `http://localhost:8545`
+4. run `$ npm test`
 
 ## License
 
