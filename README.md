@@ -5,10 +5,12 @@
 
 ## Usage
 
-1. `$ cd rpc-tests`
-2. `$ npm install`
-3. start a local CPP node at `http://localhost:8080` and local GO node at `http://localhost:8545`
-4. run `$ npm test`
+1. clone `$ git clone https://github.com/ethereum/rpc-tests`
+2. `$ cd rpc-tests`
+3. `$ git submodule update --init`
+4. `$ npm install`
+5. start a local CPP node at `http://localhost:8080` and local GO node at `http://localhost:8545`
+6. run `$ npm test`
 
 ## License
 

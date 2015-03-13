@@ -1,0 +1,3 @@
+[submodule "lib/tests"]
+	path = lib/tests
+	url = https://github.com/ethereum/tests
