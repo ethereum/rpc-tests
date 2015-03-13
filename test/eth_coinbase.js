@@ -17,7 +17,7 @@ var asyncTest = function(host, done){
         
         assert.equal(status, 200, 'has status code');
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
-        assert.isTrue(Helpers.isAddress(result.result));
+        assert.isTrue(result.result === null || Helpers.isAddress(result.result), 'is coinbase address');
 
         config.coinbase = result.result;
 
