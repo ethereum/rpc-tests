@@ -52,7 +52,7 @@ var asyncErrorTest = function(host, done, param){
 
 describe(method, function(){
 
-    Helpers.each(function(key, host){
+    Helpers.eachHost(function(key, host){
         describe(key, function(){
             // uninstall the filters after we are done
             afterEach(function(){

@@ -27,7 +27,7 @@ var asyncTest = function(host, done){
 };
 
 describe(method, function(){
-    Helpers.each(function(key, host){
+    Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return an array with compilers', function(done){
                 asyncTest(host, done);
