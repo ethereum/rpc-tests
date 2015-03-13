@@ -12,6 +12,8 @@
 5. start a local CPP node at `http://localhost:8080` and local GO node at `http://localhost:8545`
 6. run `$ npm test`
 
+If you don't want to run the tests against all nodes, or run against remote nodes, just change the `hosts` in the `lib/config.js`.
+
 ## License
 
 The MIT License
