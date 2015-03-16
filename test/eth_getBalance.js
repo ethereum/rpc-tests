@@ -14,7 +14,7 @@ var asyncTest = function(host, done){
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
         
         // PARAMETERS
-        params: ['0x'+ config.testBlocks.SimpleTx.genesisBlockHeader.coinbase, 'latest']
+        params: ['0x095e7baea6a6c7c4c2dfeb977efac326af552d87', 'latest']
 
     }, function(result, status) {
 
@@ -25,7 +25,7 @@ var asyncTest = function(host, done){
         assert.match(result.result, /^0x/, 'is hex');
         assert.isNumber(+result.result, 'can be converted to a number');
 
-        assert.equal(+result.result, 0, 'should have balance');
+        assert.equal(+result.result, config.testBlocks.postState['095e7baea6a6c7c4c2dfeb977efac326af552d87'].balance, 'should have balance');
 
         done();
     });
