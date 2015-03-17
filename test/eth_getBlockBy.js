@@ -38,7 +38,7 @@ var asyncTest = function(host, done, method, params, block){
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
         assert.isObject(result.result, 'is object');
 
-        config.blockTest(result.result, block);
+        config.blockTest(result.result, block.blockHeader);
 
         // test for transaction objects
         if(params[1]) {
@@ -90,11 +90,11 @@ describe(method, function(){
     Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return a block with the proper structure, containing array of transaction objects', function(done){
-                asyncTest(host, done, method, ['0x5', true], block);
+                asyncTest(host, done, method, ['0x5', true], block2);
             });
 
             it('should return a block with the proper structure, containing array of transaction hashes', function(done){
-                asyncTest(host, done, method, ['0x5', false], block);
+                asyncTest(host, done, method, ['0x5', false], block1);
             });
 
             it('should return an error when the wrong parameters is passed', function(done){
@@ -117,11 +117,11 @@ describe(method, function(){
     Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return a block with the proper structure, containing array of transaction objects', function(done){
-                asyncTest(host, done, method, ['0x'+ block.blockHeader.hash, true], block2);
+                asyncTest(host, done, method, ['0x'+ block2.blockHeader.hash, true], block2);
             });
 
             it('should return a block with the proper structure, containing array of transaction hashes', function(done){
-                asyncTest(host, done, method, ['0x'+ block.blockHeader.hash, false], block1);
+                asyncTest(host, done, method, ['0x'+ block1.blockHeader.hash, false], block1);
             });
 
             it('should return an error when the wrong parameters is passed', function(done){
