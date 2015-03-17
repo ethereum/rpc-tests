@@ -1,6 +1,26 @@
 # Ethereum RPC tests
 
 
+Untested:
+
+- eth_sendTransaction
+- eth_call
+- eth_flush
+- eth_compileSolidity
+- eth_getFilterChanges
+- eth_getFilterLogs
+- eth_getLogs
+- eth_getWork
+- eth_submitWork
+- db_putString
+- db_getString
+- db_putHex
+- db_getHex
+- shh_post
+- shh_newGroup
+- shh_addToGroup
+- shh_getFilterChanges
+- shh_getMessages
 
 
 ## Usage
@@ -10,7 +30,8 @@
 3. `$ git submodule update --init`
 4. `$ npm install`
 5. start a local CPP node at `http://localhost:8080` and local GO node at `http://localhost:8545`
-6. run `$ npm test`
+6. The nodes need the following state to work: https://github.com/ethereum/tests/blob/develop/BlockTests/bcJS_API_Test.json
+7. run `$ npm test`
 
 If you don't want to run the tests against all nodes, or run against remote nodes, just change the `hosts` in the `lib/config.js`.
 
