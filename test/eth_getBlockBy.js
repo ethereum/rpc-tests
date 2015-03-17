@@ -3,8 +3,8 @@ var config = require('../lib/config'),
     assert = require('chai').assert;
     _ = require('underscore');
 
-// METHOD
-var method = 'eth_getBlockByHash';
+var method = '';
+
 
 // GET BLOCK 5 and 6 as parent
 var block = _.find(config.testBlocks.blocks, function(bl, index){
@@ -16,7 +16,7 @@ var block = _.find(config.testBlocks.blocks, function(bl, index){
 
 
 // TEST
-var asyncTest = function(host, done, params, block){
+var asyncTest = function(host, done, method, params, block){
 
     Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
@@ -58,7 +58,7 @@ var asyncTest = function(host, done, params, block){
 };
 
 
-var asyncErrorTest = function(host, done, params){
+var asyncErrorTest = function(host, done, method, params){
     Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
         
@@ -77,26 +77,54 @@ var asyncErrorTest = function(host, done, params){
 
 
 
+method = 'eth_getBlockByHash';
 describe(method, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return a block with the proper structure, containing array of transaction objects', function(done){
-                asyncTest(host, done, ['0x'+ block.blockHeader.hash, true], block);
+                asyncTest(host, done, method, ['0x5', true], block);
             });
 
             it('should return a block with the proper structure, containing array of transaction hashes', function(done){
-                asyncTest(host, done, ['0x'+ block.blockHeader.hash, false], block);
+                asyncTest(host, done, method, ['0x5', false], block);
             });
 
             it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d', true]);
+                asyncErrorTest(host, done, method, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d', true]);
             });
             it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
+                asyncErrorTest(host, done, method, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
             });
             it('should return an error when no parameter is passed', function(done){
-                asyncErrorTest(host, done, []);
+                asyncErrorTest(host, done, method, []);
+            });
+        });
+    });
+});
+
+
+method = 'eth_getBlockByNumber';
+describe(method, function(){
+
+    Helpers.eachHost(function(key, host){
+        describe(key, function(){
+            it('should return a block with the proper structure, containing array of transaction objects', function(done){
+                asyncTest(host, done, method, ['0x'+ block.blockHeader.hash, true], block);
+            });
+
+            it('should return a block with the proper structure, containing array of transaction hashes', function(done){
+                asyncTest(host, done, method, ['0x'+ block.blockHeader.hash, false], block);
+            });
+
+            it('should return an error when the wrong parameters is passed', function(done){
+                asyncErrorTest(host, done, method, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d', true]);
+            });
+            it('should return an error when the wrong parameters is passed', function(done){
+                asyncErrorTest(host, done, method, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
+            });
+            it('should return an error when no parameter is passed', function(done){
+                asyncErrorTest(host, done, method, []);
             });
         });
     });
