@@ -12,8 +12,9 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "chai": "*",
+    "underscore": "*",
     "xmlhttprequest": "*",
+    "chai": "*",
     "mocha": ">= 0.11.0"
   }
 }

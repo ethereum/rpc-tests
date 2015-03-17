@@ -5,8 +5,6 @@ var config = require('../lib/config'),
 // METHOD
 var method = 'eth_getStorageAt';
 
-// TODO check fo balance
-// TODO TEST for specific states (blocks) and pending?
 
 // TEST
 var asyncTest = function(host, done, params, expectedResult){
