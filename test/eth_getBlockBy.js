@@ -6,13 +6,20 @@ var config = require('../lib/config'),
 var method = '';
 
 
-// GET BLOCK 5 and 6 as parent
-var block = _.find(config.testBlocks.blocks, function(bl, index){
+// GET test BLOCK 5 and 6 as parent
+var block1 = _.find(config.testBlocks.blocks, function(bl, index){
         return (bl.blockHeader.number == 6) ? bl : false;
-    }),
-    parentBlock = _.find(config.testBlocks.blocks, function(bl, index){
-        return (bl.blockHeader.number == 5) ? bl : false;
     });
+block1.parentBlock = _.find(config.testBlocks.blocks, function(bl, index){
+    return (bl.blockHeader.number == 5) ? bl : false;
+});
+
+var block2 = _.find(config.testBlocks.blocks, function(bl, index){
+        return (bl.blockHeader.number == 3) ? bl : false;
+    });
+block2.parentBlock = _.find(config.testBlocks.blocks, function(bl, index){
+    return (bl.blockHeader.number == 2) ? bl : false;
+});
 
 
 // TEST
@@ -110,11 +117,11 @@ describe(method, function(){
     Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return a block with the proper structure, containing array of transaction objects', function(done){
-                asyncTest(host, done, method, ['0x'+ block.blockHeader.hash, true], block);
+                asyncTest(host, done, method, ['0x'+ block.blockHeader.hash, true], block2);
             });
 
             it('should return a block with the proper structure, containing array of transaction hashes', function(done){
-                asyncTest(host, done, method, ['0x'+ block.blockHeader.hash, false], block);
+                asyncTest(host, done, method, ['0x'+ block.blockHeader.hash, false], block1);
             });
 
             it('should return an error when the wrong parameters is passed', function(done){
