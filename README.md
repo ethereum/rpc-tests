@@ -36,12 +36,16 @@ Untested:
 You can also run only tests for `eth_`, `shh_` or `net_` RPC methods as follows:
 
     $ make test.eth
-
     $ make test.shh
-
     $ make test.net
 
 If you don't want to run the tests against all nodes, or run against remote nodes, just change the `hosts` in the `lib/config.js`.
+
+### Start a node with a certain state
+
+#### CPP
+
+    $ ethrpctest --json <pathToTheTestRepo>/BlockTests/bcJS_API_Test.json --test JS_API_Tests
 
 ## License
 
