@@ -3,8 +3,6 @@ var config = require('../lib/config'),
     assert = require('chai').assert;
     _ = require('underscore');
 
-var method = '';
-
 
 // GET test BLOCK 4
 var block = _.find(config.testBlocks.blocks, function(bl, index){
@@ -46,56 +44,56 @@ var asyncErrorTest = function(host, done, method, params){
 };
 
 
-method = 'eth_getUncleByBlockHashAndIndex';
-describe(method, function(){
+var method1 = 'eth_getUncleByBlockHashAndIndex';
+describe(method1, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return an uncle with the proper structure', function(done){
                 
                 var givenBlock = Helpers.send(host, {
-                    id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_getBlockByHash',
+                    id: config.rpcMessageId++, jsonrpc: "2.0", method1: 'eth_getBlockByHash',
                     
                     // PARAMETERS
                     params: ['0x'+ block.blockHeader.hash, false]
                 });
 
-                syncTest(host, method, [givenBlock.hash, '0x1'], block);
+                syncTest(host, method1, [givenBlock.hash, '0x1'], block);
             });
 
             it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
+                asyncErrorTest(host, done, method1, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
             });
             it('should return an error when no parameter is passed', function(done){
-                asyncErrorTest(host, done, method, []);
+                asyncErrorTest(host, done, method1, []);
             });
         });
     });
 });
 
 
-method = 'eth_getUncleByBlockNumberAndIndex';
-describe(method, function(){
+var method2 = 'eth_getUncleByBlockNumberAndIndex';
+describe(method2, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return an uncle with the proper structure', function(done){
                 
                 var givenBlock = Helpers.send(host, {
-                    id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_getBlockByHash',
+                    id: config.rpcMessageId++, jsonrpc: "2.0", method2: 'eth_getBlockByHash',
                     
                     // PARAMETERS
                     params: ['0x'+ block.blockHeader.hash, false]
                 });
 
-                syncTest(host, method, ['0x4', '0x1'], block);
+                syncTest(host, method2, ['0x4', '0x1'], block);
             });
 
             it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
+                asyncErrorTest(host, done, method2, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
             });
             it('should return an error when no parameter is passed', function(done){
-                asyncErrorTest(host, done, method, []);
+                asyncErrorTest(host, done, method2, []);
             });
         });
     });
