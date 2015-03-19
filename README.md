@@ -43,7 +43,13 @@ If you don't want to run the tests against all nodes, or run against remote node
 
 ### Start a node with a certain state
 
+To load a fixed state, clone the ethereum test repo as follows:
+
+    $ git clone https://github.com/ethereum/tests
+
 #### CPP
+
+Then run the following cpp cli and load the `JS_API_Tests` test:
 
     $ ethrpctest --json <pathToTheTestRepo>/BlockTests/bcJS_API_Test.json --test JS_API_Tests
 
