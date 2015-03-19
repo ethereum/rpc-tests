@@ -54,11 +54,11 @@ describe(method, function(){
     Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return 2 as a hexstring', function(done){
-                asyncTest(host, done, ['0x3'], 2);
+                asyncTest(host, done, ['0x4'], 2);
             });
 
             it('should return 0 as a hexstring', function(done){
-                asyncTest(host, done, ['0x4'], 0);
+                asyncTest(host, done, ['0x2'], 0);
             });
 
             it('should return an error when no parameter is passed', function(done){

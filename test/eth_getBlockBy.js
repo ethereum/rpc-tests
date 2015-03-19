@@ -4,14 +4,9 @@ var config = require('../lib/config'),
     _ = require('underscore');
 
 
-// GET test BLOCK 5 and 6 as parent
-var block1 = _.find(config.testBlocks.blocks, function(bl){
-        return (bl.blockHeader.number == 6) ? bl : false;
-    });
-
-var block2 = _.find(config.testBlocks.blocks, function(bl){
-        return (bl.blockHeader.number == 3) ? bl : false;
-    });
+// GET test BLOCKs
+var block6 = Helpers.getBlockByNumber(6);
+var block3 = Helpers.getBlockByNumber(3);
 
 
 // TEST
@@ -84,11 +79,11 @@ describe(method1, function(){
     Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return a block with the proper structure, containing array of transaction objects', function(done){
-                asyncTest(host, done, method1, ['0x3', true], block2);
+                asyncTest(host, done, method1, ['0x3', true], block3);
             });
 
             it('should return a block with the proper structure, containing array of transaction hashes', function(done){
-                asyncTest(host, done, method1, ['0x6', false], block1);
+                asyncTest(host, done, method1, ['0x6', false], block6);
             });
 
             it('should return an error when the wrong parameters is passed', function(done){
@@ -111,11 +106,11 @@ describe(method2, function(){
     Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return a block with the proper structure, containing array of transaction objects', function(done){
-                asyncTest(host, done, method2, ['0x'+ block2.blockHeader.hash, true], block2);
+                asyncTest(host, done, method2, ['0x'+ block3.blockHeader.hash, true], block3);
             });
 
             it('should return a block with the proper structure, containing array of transaction hashes', function(done){
-                asyncTest(host, done, method2, ['0x'+ block1.blockHeader.hash, false], block1);
+                asyncTest(host, done, method2, ['0x'+ block6.blockHeader.hash, false], block6);
             });
 
             it('should return an error when the wrong parameters is passed', function(done){

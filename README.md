@@ -31,7 +31,15 @@ Untested:
 4. `$ npm install`
 5. start a local CPP node at `http://localhost:8080` and local GO node at `http://localhost:8545`
 6. The nodes need the following state to work: https://github.com/ethereum/tests/blob/develop/BlockTests/bcJS_API_Test.json
-7. run `$ npm test`
+7. run `$ make test`
+
+You can also run only tests for `eth_`, `shh_` or `net_` RPC methods as follows:
+
+    $ make test.eth
+
+    $ make test.shh
+
+    $ make test.net
 
 If you don't want to run the tests against all nodes, or run against remote nodes, just change the `hosts` in the `lib/config.js`.
 

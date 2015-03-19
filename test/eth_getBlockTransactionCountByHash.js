@@ -5,6 +5,9 @@ var config = require('../lib/config'),
 // METHOD
 var method = 'eth_getBlockTransactionCountByHash';
 
+// GET test BLOCK 3
+var block3 = Helpers.getBlockByNumber(3);
+var block2 = Helpers.getBlockByNumber(2);
 
 // TEST
 var asyncTest = function(host, done, params, expectedResult){
@@ -54,11 +57,11 @@ describe(method, function(){
     Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return 1 as a hexstring', function(done){
-                asyncTest(host, done, ['0xf3c13a2f47bdfd8cede0f9fdb8bfb3d3bffbd14097c6cd8b7d0291ecc5dbf9ba'], 1);
+                asyncTest(host, done, ['0x'+ block3.blockHeader.hash], 2);
             });
 
             it('should return 2 as a hexstring', function(done){
-                asyncTest(host, done, ['0xf16f9ab4a947c95f2615dcb2e2d3a9b189447fa8fc0b25b3166ba79f213c3156'], 2);
+                asyncTest(host, done, ['0x'+ block2.blockHeader.hash], 1);
             });
 
             it('should return an error when no parameter is passed', function(done){

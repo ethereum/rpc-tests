@@ -5,9 +5,7 @@ var config = require('../lib/config'),
 
 
 // GET test BLOCK 4
-var block = _.find(config.testBlocks.blocks, function(bl, index){
-        return (bl.blockHeader.number == 4) ? bl : false;
-    });
+var block = Helpers.getBlockByNumber(4);
 
 // TEST
 var syncTest = function(host, method, params, block){
@@ -49,16 +47,8 @@ describe(method1, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return an uncle with the proper structure', function(done){
-                
-                var givenBlock = Helpers.send(host, {
-                    id: config.rpcMessageId++, jsonrpc: "2.0", method1: 'eth_getBlockByHash',
-                    
-                    // PARAMETERS
-                    params: ['0x'+ block.blockHeader.hash, false]
-                });
-
-                syncTest(host, method1, [givenBlock.hash, '0x1'], block);
+            it('should return an uncle with the proper structure', function(){
+                syncTest(host, method1, ['0x'+ block.blockHeader.hash, '0x1'], block);
             });
 
             it('should return an error when the wrong parameters is passed', function(done){
@@ -77,15 +67,7 @@ describe(method2, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return an uncle with the proper structure', function(done){
-                
-                var givenBlock = Helpers.send(host, {
-                    id: config.rpcMessageId++, jsonrpc: "2.0", method2: 'eth_getBlockByHash',
-                    
-                    // PARAMETERS
-                    params: ['0x'+ block.blockHeader.hash, false]
-                });
-
+            it('should return an uncle with the proper structure', function(){
                 syncTest(host, method2, ['0x4', '0x1'], block);
             });
 

@@ -5,6 +5,10 @@ var config = require('../lib/config'),
 // METHOD
 var method = 'eth_getUncleCountByBlockHash';
 
+// GET test BLOCK 4
+var block4 = Helpers.getBlockByNumber(4);
+var block5 = Helpers.getBlockByNumber(5);
+var block6 = Helpers.getBlockByNumber(6);
 
 // TEST
 var asyncTest = function(host, done, params, expectedResult){
@@ -54,11 +58,15 @@ describe(method, function(){
     Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return 2 as a hexstring', function(done){
-                asyncTest(host, done, ['0x03a8296196f16a58b2e388d8465a951ce5ad882f7e52c4835836dab3403ba5cb'], 2);
+                asyncTest(host, done, ['0x'+ block4.blockHeader.hash], 2);
+            });
+
+            it('should return 1 as a hexstring', function(done){
+                asyncTest(host, done, ['0x'+ block6.blockHeader.hash], 1);
             });
 
             it('should return 0 as a hexstring', function(done){
-                asyncTest(host, done, ['0xf16f9ab4a947c95f2615dcb2e2d3a9b189447fa8fc0b25b3166ba79f213c3156'], 0);
+                asyncTest(host, done, ['0x'+ block5.blockHeader.hash], 0);
             });
 
             it('should return an error when no parameter is passed', function(done){
