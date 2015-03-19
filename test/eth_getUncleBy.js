@@ -10,6 +10,9 @@ var method = '';
 var block = _.find(config.testBlocks.blocks, function(bl, index){
         return (bl.blockHeader.number == 4) ? bl : false;
     });
+block.parentBlock = _.find(config.testBlocks.blocks, function(bl){
+    return (bl.blockHeader.number == 3) ? bl : false;
+});
 
 
 // TEST
