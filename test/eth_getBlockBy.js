@@ -10,15 +10,15 @@ var method = '';
 var block1 = _.find(config.testBlocks.blocks, function(bl){
         return (bl.blockHeader.number == 6) ? bl : false;
     });
-block1.parentBlock = _.find(config.testBlocks.blocks, function(bl){
+block1.blockHeader.parentblockHeader = _.find(config.testBlocks.blocks, function(bl){
     return (bl.blockHeader.number == 5) ? bl : false;
 });
 
 var block2 = _.find(config.testBlocks.blocks, function(bl){
-        return (bl.blockHeader.number == 3) ? bl : false;
+        return (bl.blockHeader.number == 3) ? bl.blockHeader : false;
     });
-block2.parentBlock = _.find(config.testBlocks.blocks, function(bl){
-    return (bl.blockHeader.number == 2) ? bl : false;
+block2.blockHeader.parentblockHeader = _.find(config.testBlocks.blocks, function(bl){
+    return (bl.blockHeader.number == 2) ? bl.blockHeader : false;
 });
 
 
