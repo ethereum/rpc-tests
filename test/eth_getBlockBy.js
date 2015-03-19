@@ -90,11 +90,11 @@ describe(method, function(){
     Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return a block with the proper structure, containing array of transaction objects', function(done){
-                asyncTest(host, done, method, ['0x5', true], block2);
+                asyncTest(host, done, method, ['0x3', true], block2);
             });
 
             it('should return a block with the proper structure, containing array of transaction hashes', function(done){
-                asyncTest(host, done, method, ['0x5', false], block1);
+                asyncTest(host, done, method, ['0x6', false], block1);
             });
 
             it('should return an error when the wrong parameters is passed', function(done){
