@@ -1,6 +1,7 @@
 var config = require('../lib/config'),
     Helpers = require('../lib/helpers'),
-    assert = require('chai').assert;
+    assert = require('chai').assert,
+    _ = require('underscore');
 
 // METHOD
 var method = 'eth_getBlockTransactionCountByHash';
@@ -56,12 +57,10 @@ describe(method, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return 1 as a hexstring', function(done){
-                asyncTest(host, done, ['0x'+ block3.blockHeader.hash], 2);
-            });
-
-            it('should return 2 as a hexstring', function(done){
-                asyncTest(host, done, ['0x'+ block2.blockHeader.hash], 1);
+            _.each(config.testBlocks.blocks, function(block){
+                it('should return '+block.transactions.length+' as a hexstring', function(done){
+                    asyncTest(host, done, ['0x'+ block.blockHeader.hash], block.transactions.length);
+                });
             });
 
             it('should return an error when no parameter is passed', function(done){
