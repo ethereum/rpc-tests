@@ -19,7 +19,6 @@ var syncTest = function(host, params, expectedResult){
         
     assert.property(result, 'result', (result.error) ? result.error.message : 'error');
     assert.isString(result.result, 'is string');
-    assert.match(result.result, /^0x/, 'is hex');
 
     assert.equal(result.result, expectedResult, 'should match '+ expectedResult);
 
@@ -49,7 +48,7 @@ describe(method, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return return the previously stored value', function(){
+            it('should return the previously stored value', function(){
                 var randomString = Math.random().toString();
 
                 Helpers.send(host, {

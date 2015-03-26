@@ -19,8 +19,6 @@ var asyncTest = function(host, done, params, expectedResult){
         
         assert.equal(status, 200, 'has status code');
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
-        assert.isString(result.result, 'is string');
-        assert.match(result.result, /^0x/, 'is hex');
 
         assert.equal(result.result, expectedResult, 'should match '+ expectedResult);
 
@@ -52,7 +50,7 @@ describe(method, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return return TRUE', function(done){
+            it('should return TRUE', function(done){
                 asyncTest(host, done, [
                     'myDb',
                     'myKey',

@@ -49,7 +49,7 @@ describe(method, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return return the previously stored value', function(){
+            it('should return the previously stored value', function(){
                 var randomHex = '0x'+ Math.random().toString().replace('.','');
 
                 Helpers.send(host, {
