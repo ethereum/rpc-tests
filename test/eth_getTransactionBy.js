@@ -4,9 +4,6 @@ var config = require('../lib/config'),
     _ = require('underscore');
 
 
-// GET test BLOCK 3
-var block = Helpers.getBlockByNumber(3);
-
 
 // TEST
 var syncTest = function(host, method, params, block){
@@ -21,7 +18,7 @@ var syncTest = function(host, method, params, block){
     assert.property(result, 'result', (result.error) ? result.error.message : 'error');
     assert.isObject(result.result, 'is object');
 
-    config.transactionTest(result.result, block.transactions[1], 1, block);
+    config.transactionTest(result.result, block.transactions[0], 0, block);
 };
 
 
@@ -49,17 +46,21 @@ describe(method1, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return a transaction with the proper structure', function(){
-                
-                var givenBlock = Helpers.send(host, {
-                    id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_getBlockByHash',
-                    
-                    // PARAMETERS
-                    params: ['0x'+ block.blockHeader.hash, false]
-                });
+            _.each(config.testBlocks.blocks, function(bl){
+                _.each(bl.transactions, function(tx, index){
+                    it('should return a transaction with the proper structure', function(){
+                        
+                        var givenBlock = Helpers.send(host, {
+                            id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_getBlockByHash',
+                            
+                            // PARAMETERS
+                            params: ['0x'+ bl.blockHeader.hash, false]
+                        });
 
-                syncTest(host, method1, [givenBlock.result.transactions[1]], block);
-            });
+                        syncTest(host, method1, [givenBlock.result.transactions[index]], bl);
+                    });
+                });
+            });  
 
             it('should return an error when the wrong parameters is passed', function(done){
                 asyncErrorTest(host, done, method1, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
@@ -77,9 +78,12 @@ describe(method2, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return a transaction with the proper structure', function(){
-                
-                syncTest(host, method2, ['0x'+ block.blockHeader.hash, '0x1'], block);
+            _.each(config.testBlocks.blocks, function(bl){
+                _.each(bl.transactions, function(tx, index){
+                    it('should return a transaction with the proper structure', function(){
+                        syncTest(host, method2, ['0x'+ bl.blockHeader.hash, Helpers.fromDecimal(index)], bl);
+                    });
+                });
             });
 
             it('should return an error when the wrong parameters is passed', function(done){
@@ -98,8 +102,12 @@ describe(method3, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return a transaction with the proper structure', function(){
-                syncTest(host, method3, ['0x3', '0x1'], block);
+            _.each(config.testBlocks.blocks, function(bl){
+                _.each(bl.transactions, function(tx, index){
+                    it('should return a transaction with the proper structure', function(){
+                        syncTest(host, method3, [Helpers.fromDecimal(bl.blockHeader.number), Helpers.fromDecimal(index)], bl);
+                    });
+                });
             });
 
             it('should return an error when the wrong parameters is passed', function(done){

@@ -4,11 +4,6 @@ var config = require('../lib/config'),
     _ = require('underscore');
 
 
-// GET test BLOCKs
-var block6 = Helpers.getBlockByNumber(6);
-var block3 = Helpers.getBlockByNumber(3);
-
-
 // TEST
 var asyncTest = function(host, done, method, params, block){
 
@@ -78,12 +73,17 @@ describe(method1, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return a block with the proper structure, containing array of transaction objects', function(done){
-                asyncTest(host, done, method1, ['0x3', true], block3);
-            });
 
-            it('should return a block with the proper structure, containing array of transaction hashes', function(done){
-                asyncTest(host, done, method1, ['0x6', false], block6);
+            _.each(config.testBlocks.blocks, function(block){
+
+                it('should return a block with the proper structure, containing array of transaction objects', function(done){
+                    asyncTest(host, done, method1, [Helpers.fromDecimal(block.blockHeader.number), true], block);
+                });
+
+                it('should return a block with the proper structure, containing array of transaction hashes', function(done){
+                    asyncTest(host, done, method1, [Helpers.fromDecimal(block.blockHeader.number), false], block);
+                });
+
             });
 
             it('should return an error when the wrong parameters is passed', function(done){
@@ -105,12 +105,15 @@ describe(method2, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return a block with the proper structure, containing array of transaction objects', function(done){
-                asyncTest(host, done, method2, ['0x'+ block3.blockHeader.hash, true], block3);
-            });
 
-            it('should return a block with the proper structure, containing array of transaction hashes', function(done){
-                asyncTest(host, done, method2, ['0x'+ block6.blockHeader.hash, false], block6);
+            _.each(config.testBlocks.blocks, function(block){
+                it('should return a block with the proper structure, containing array of transaction objects', function(done){
+                    asyncTest(host, done, method2, ['0x'+ block.blockHeader.hash, true], block);
+                });
+
+                it('should return a block with the proper structure, containing array of transaction hashes', function(done){
+                    asyncTest(host, done, method2, ['0x'+ block.blockHeader.hash, false], block);
+                });
             });
 
             it('should return an error when the wrong parameters is passed', function(done){

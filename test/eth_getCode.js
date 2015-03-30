@@ -1,6 +1,7 @@
 var config = require('../lib/config'),
     Helpers = require('../lib/helpers'),
-    assert = require('chai').assert;
+    assert = require('chai').assert,
+    _ = require('underscore');
 
 // METHOD
 var method = 'eth_getCode';
@@ -52,18 +53,25 @@ describe(method, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return the code when defaultBlock is "latest"', function(done){
-                asyncTest(host, done, ['0x6295ee1b4f6dd65047762f924ecd367c17eabf8f', 'latest'], config.testBlocks.postState['6295ee1b4f6dd65047762f924ecd367c17eabf8f'].code);
+
+            _.each(config.testBlocks.postState, function(state, key){
+                it('should return the code when defaultBlock is "latest" at 0x'+ key, function(done){
+                    asyncTest(host, done, ['0x'+ key, 'latest'], state.code);
+                });
             });
 
-            it('should return the code when defaultBlock is "latest"', function(done){
-                asyncTest(host, done, ['0xec0e71ad0a90ffe1909d27dac207f7680abba42d', 'latest'], config.testBlocks.postState['ec0e71ad0a90ffe1909d27dac207f7680abba42d'].code);
+            _.each(config.testBlocks.pre, function(state, key){
+                it('should return code as when defaultBlock is 0 at 0x'+ key, function(done){
+                    asyncTest(host, done, ['0x'+ key, '0x0'], state.code);
+                });
             });
-            it('should return nothing as there is no code at block 0', function(done){
-                asyncTest(host, done, ['0xec0e71ad0a90ffe1909d27dac207f7680abba42d', '0x0'], '0x00');
-            });
-            it('should return null as there is no code at this address', function(done){
-                asyncTest(host, done, ['0xbcde5374fce5edbc8e2a8697c15331677e6ebf0b', 'latest'], '0x00');
+
+            _.each(config.testBlocks.pre, function(state, key){
+                if(state.code === '0x') {
+                    it('should return nothing as there is no code at block 0', function(done){
+                        asyncTest(host, done, ['0x'+ key, '0x0'], '0x');
+                    });
+                }
             });
 
             it('should return an error when no parameter is passed', function(done){
