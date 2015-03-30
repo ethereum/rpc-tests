@@ -4,11 +4,8 @@ var config = require('../lib/config'),
     _ = require('underscore');
 
 
-// GET test BLOCK 4
-var block = Helpers.getBlockByNumber(4);
-
 // TEST
-var syncTest = function(host, method, params, block){
+var syncTest = function(host, method, params, uncle){
 
     var result = Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
@@ -20,7 +17,7 @@ var syncTest = function(host, method, params, block){
     assert.property(result, 'result', (result.error) ? result.error.message : 'error');
     assert.isObject(result.result, 'is object');
 
-    config.blockTest(result.result, block.uncleHeaders[1]);
+    config.blockTest(result.result, uncle);
 };
 
 
@@ -47,8 +44,13 @@ describe(method1, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return an uncle with the proper structure', function(){
-                syncTest(host, method1, ['0x'+ block.blockHeader.hash, '0x1'], block);
+
+            _.each(config.testBlocks.blocks, function(block){
+                _.each(block.uncleHeaders, function(uncle, index){
+                    it('should return an uncle with the proper structure', function(){
+                        syncTest(host, method1, ['0x'+ block.blockHeader.hash, Helpers.fromDecimal(index)], uncle);
+                    });
+                });
             });
 
             it('should return an error when the wrong parameters is passed', function(done){
@@ -67,8 +69,13 @@ describe(method2, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return an uncle with the proper structure', function(){
-                syncTest(host, method2, ['0x4', '0x1'], block);
+
+            _.each(config.testBlocks.blocks, function(block){
+                _.each(block.uncleHeaders, function(uncle, index){
+                    it('should return an uncle with the proper structure', function(){
+                        syncTest(host, method2, [Helpers.fromDecimal(block.blockHeader.number), Helpers.fromDecimal(index)], uncle);
+                    });
+                });
             });
 
             it('should return an error when the wrong parameters is passed', function(done){
