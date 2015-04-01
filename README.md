@@ -41,6 +41,16 @@ You can also run only tests for `eth_`, `shh_` or `net_` RPC methods as follows:
 
 If you don't want to run the tests against all nodes, or run against remote nodes, just change the `hosts` in the `lib/config.js`.
 
+### Running single tests
+
+To run a single test you need to install mocha globally:
+
+    $ npm install -g mocha
+    $ cd rpc-tests
+    $ mocha test/1_testConnection.js test/eth_myMethod.js
+
+By changing the last file name to whatever method you want to test, you can run test only for that specifc method.
+
 ### Start a node with a certain state
 
 To load a fixed state, clone the ethereum test repo as follows:
