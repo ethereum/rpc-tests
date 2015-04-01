@@ -29,6 +29,8 @@ Untested:
 6. The nodes need the following state to work: https://github.com/ethereum/tests/blob/develop/BlockTests/bcJS_API_Test.json
 7. run `$ make test`
 
+**Note** If you run the tests make sure you update the `lib/tests` submodule as well as the `tests` repository, which you use to load the blockchain state so that both are in the same state.
+
 You can also run only tests for `eth_`, `shh_` or `net_` RPC methods as follows:
 
     $ make test.eth
