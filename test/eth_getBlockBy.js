@@ -19,29 +19,35 @@ var asyncTest = function(host, done, method, params, block){
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
         assert.isObject(result.result, 'is object');
 
-        config.blockTest(result.result, block.blockHeader);
+        if(!block)
+            assert.isNull(result.result);
+        else {
+            
+            config.blockTest(result.result, block.blockHeader);
 
-        // test for transaction objects
-        if(params[1]) {
-            _.each(result.result.transactions, function(tx, index){
-                config.transactionTest(tx, block.transactions[index], index, block);
-            });
+            // test for transaction objects
+            if(params[1]) {
+                _.each(result.result.transactions, function(tx, index){
+                    config.transactionTest(tx, block.transactions[index], index, block);
+                });
 
-        // test for correct transaction hashes
-        } else {
-            _.each(result.result.transactions, function(tx, index){
-                assert.match(tx, /^0x/, 'should be an transaction hash');
-            });
+            // test for correct transaction hashes
+            } else {
+                _.each(result.result.transactions, function(tx, index){
+                    assert.match(tx, /^0x/, 'should be an transaction hash');
+                });
+            }
+
+            // test uncles
+            if(block.uncleHeaders.length > 0) {
+                assert.isArray(result.result.uncles, 'should contain uncles');
+
+                _.each(block.uncleHeaders, function(uncle, index){
+                    assert.strictEqual(result.result.uncles[index], '0x'+ uncle.hash);
+                });
+            }
         }
 
-        // test uncles
-        if(block.uncleHeaders.length > 0) {
-            assert.isArray(result.result.uncles, 'should contain uncles');
-
-            _.each(block.uncleHeaders, function(uncle, index){
-                assert.strictEqual(result.result.uncles[index], '0x'+ uncle.hash);
-            });
-        }
 
         done();
     });
@@ -85,11 +91,11 @@ describe(method1, function(){
 
             });
 
-            it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method1, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d', true]);
+            it('should return null when no block was found', function(done){
+                asyncTest(host, done, method1, ['0xbbbbbb', true], null);
             });
             it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method1, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
+                asyncErrorTest(host, done, method1, ['0xbbb']);
             });
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done, method1, []);
@@ -115,8 +121,8 @@ describe(method2, function(){
                 });
             });
 
-            it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method2, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d', true]);
+            it('should return null when no block was found', function(done){
+                asyncTest(host, done, method2, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d', true], null);
             });
             it('should return an error when the wrong parameters is passed', function(done){
                 asyncErrorTest(host, done, method2, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);

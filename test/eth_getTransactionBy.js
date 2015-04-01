@@ -6,7 +6,7 @@ var config = require('../lib/config'),
 
 
 // TEST
-var syncTest = function(host, method, params, block){
+var syncTest = function(host, method, params, block, index){
 
     var result = Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
@@ -18,7 +18,10 @@ var syncTest = function(host, method, params, block){
     assert.property(result, 'result', (result.error) ? result.error.message : 'error');
     assert.isObject(result.result, 'is object');
 
-    config.transactionTest(result.result, block.transactions[0], 0, block);
+    if(!block)
+        assert.isNull(result.result);
+    else
+        config.transactionTest(result.result, block.transactions[index], index, block);
 };
 
 
@@ -57,13 +60,13 @@ describe(method1, function(){
                             params: ['0x'+ bl.blockHeader.hash, false]
                         });
 
-                        syncTest(host, method1, [givenBlock.result.transactions[index]], bl);
+                        syncTest(host, method1, [givenBlock.result.transactions[index]], bl, index);
                     });
                 });
             });  
 
-            it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method1, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
+            it('should return null when no transaction was found', function(){
+                syncTest(host, method1, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d'], null);
             });
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done, method1, []);
@@ -81,14 +84,15 @@ describe(method2, function(){
             _.each(config.testBlocks.blocks, function(bl){
                 _.each(bl.transactions, function(tx, index){
                     it('should return a transaction with the proper structure', function(){
-                        syncTest(host, method2, ['0x'+ bl.blockHeader.hash, Helpers.fromDecimal(index)], bl);
+                        syncTest(host, method2, ['0x'+ bl.blockHeader.hash, Helpers.fromDecimal(index)], bl, index);
                     });
                 });
             });
 
-            it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method2, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
+            it('should return null when no transaction was found', function(){
+                syncTest(host, method2, ['0x'+ config.testBlocks.blocks[0].blockHeader.hash, '0xb'], null);
             });
+
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done, method2, []);
             });
@@ -105,13 +109,13 @@ describe(method3, function(){
             _.each(config.testBlocks.blocks, function(bl){
                 _.each(bl.transactions, function(tx, index){
                     it('should return a transaction with the proper structure', function(){
-                        syncTest(host, method3, [Helpers.fromDecimal(bl.blockHeader.number), Helpers.fromDecimal(index)], bl);
+                        syncTest(host, method3, [Helpers.fromDecimal(bl.blockHeader.number), Helpers.fromDecimal(index)], bl, index);
                     });
                 });
             });
 
-            it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method3, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
+            it('should return null when no transaction was found', function(){
+                syncTest(host, method3, ['0x2', '0xb'], null);
             });
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done, method3, []);

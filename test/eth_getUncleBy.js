@@ -17,7 +17,10 @@ var syncTest = function(host, method, params, uncle){
     assert.property(result, 'result', (result.error) ? result.error.message : 'error');
     assert.isObject(result.result, 'is object');
 
-    config.blockTest(result.result, uncle);
+    if(!uncle)
+        assert.isNull(result.result);
+    else
+        config.blockTest(result.result, uncle);
 };
 
 
@@ -48,13 +51,16 @@ describe(method1, function(){
             _.each(config.testBlocks.blocks, function(block){
                 _.each(block.uncleHeaders, function(uncle, index){
                     it('should return an uncle with the proper structure', function(){
-                        syncTest(host, method1, ['0x'+ block.blockHeader.hash, Helpers.fromDecimal(index)], uncle);
+                        syncTest(host, method1, ['0x'+ block.blockHeader.hash, Helpers.fromDecimal(index), false], uncle);
                     });
                 });
             });
 
+            it('should return null when no uncle was found', function(){
+                syncTest(host, method1, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d', '0xb', false], null);
+            });
             it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method1, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
+                asyncErrorTest(host, done, method1, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d', '0xb']);
             });
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done, method1, []);
@@ -78,8 +84,11 @@ describe(method2, function(){
                 });
             });
 
+            it('should return null when no uncle was found', function(){
+                syncTest(host, method2, ['0x2', '0xbbb', false], null);
+            });
             it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method2, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
+                asyncErrorTest(host, done, method2, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d', '0xb']);
             });
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done, method2, []);
