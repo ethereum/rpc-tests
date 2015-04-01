@@ -18,7 +18,7 @@ var asyncTest = function(host, done){
         assert.equal(status, 200, 'has status code');
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
         assert.isString(result.result, 'is string');
-        assert.isNumber(result.result, 'can be converted to a number');
+        assert.isNumber(+result.result, 'can be converted to a number');
 
         done();
     });
