@@ -50,7 +50,10 @@ describe(method, function(){
     Helpers.eachHost(function(key, host){
         describe(key, function(){
             it('should return the previously stored value', function(){
-                var randomHex = '0x'+ Math.random().toString().replace('.','');
+                var randomHex = '0x'+ Math.random().toString().replace('.','').replace(/0/g,'');
+
+                if(randomHex.length % 2 !== 0)
+                    randomHex += 'f';
 
                 Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'db_putHex',
