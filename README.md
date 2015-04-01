@@ -57,9 +57,16 @@ To load a fixed state, clone the ethereum test repo as follows:
 
     $ git clone https://github.com/ethereum/tests
 
-#### CPP
+#### Go
 
-Then run the following cpp cli and load the `JS_API_Tests` test:
+Run the following go cli command to load the `JS_API_Tests` test:
+
+    $ geth blocktest <pathToTheTestRepo>/BlockTests/bcJS_API_Test.json JS_API_Tests rpc
+
+#### C++
+
+
+Run the following c++ cli command to load the `JS_API_Tests` test:
 
     $ ethrpctest --json <pathToTheTestRepo>/BlockTests/bcJS_API_Test.json --test JS_API_Tests
 
