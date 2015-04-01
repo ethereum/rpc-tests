@@ -15,7 +15,6 @@ var asyncTest = function(host, done, method, params, block){
 
     }, function(result, status) {
 
-        
         assert.equal(status, 200, 'has status code');
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
         assert.isObject(result.result, 'is object');
