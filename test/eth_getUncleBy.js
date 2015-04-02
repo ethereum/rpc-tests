@@ -61,7 +61,7 @@ describe(method1, function(){
                 syncTest(host, method1, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d', '0xb', false], null);
             });
             it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method1, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d', '0xb']);
+                asyncErrorTest(host, done, method1, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
             });
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done, method1, []);
@@ -89,7 +89,7 @@ describe(method2, function(){
                 syncTest(host, method2, ['0x2', '0xbbb', false], null);
             });
             it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method2, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d', '0xb']);
+                asyncErrorTest(host, done, method2, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
             });
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done, method2, []);
