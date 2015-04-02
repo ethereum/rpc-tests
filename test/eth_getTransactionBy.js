@@ -16,12 +16,13 @@ var syncTest = function(host, method, params, block, index){
     });
 
     assert.property(result, 'result', (result.error) ? result.error.message : 'error');
-    assert.isObject(result.result, 'is object');
 
     if(!block)
         assert.isNull(result.result);
-    else
+    else {
+        assert.isObject(result.result, 'is object');
         config.transactionTest(result.result, block.transactions[index], index, block);
+    }
 };
 
 

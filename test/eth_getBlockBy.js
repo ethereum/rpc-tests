@@ -17,11 +17,11 @@ var asyncTest = function(host, done, method, params, block){
 
         assert.equal(status, 200, 'has status code');
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
-        assert.isObject(result.result, 'is object');
 
         if(!block)
             assert.isNull(result.result);
         else {
+            assert.isObject(result.result, 'is object');
             
             config.blockTest(result.result, block.blockHeader);
 

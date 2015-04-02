@@ -15,12 +15,13 @@ var syncTest = function(host, method, params, uncle){
     });
 
     assert.property(result, 'result', (result.error) ? result.error.message : 'error');
-    assert.isObject(result.result, 'is object');
 
     if(!uncle)
         assert.isNull(result.result);
-    else
+    else {
+        assert.isObject(result.result, 'is object');
         config.blockTest(result.result, uncle);
+    }
 };
 
 
