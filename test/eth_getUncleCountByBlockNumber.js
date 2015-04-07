@@ -71,11 +71,11 @@ describe(method, function(){
             });
 
             it('should return 0 as a hexstring when "pending"', function(done){
-                asyncTest(host, done, ['latest'], 0);
+                asyncTest(host, done, ['pending'], 0);
             });
 
             it('should return 0 as a hexstring when "earliest" (block: '+config.testBlocks.genesisBlockHeader.hash+')', function(done){
-                asyncTest(host, done, ['latest'], 0);
+                asyncTest(host, done, ['earliest'], 0);
             });
 
             it('should return null if the block doesnt exist', function(done){
