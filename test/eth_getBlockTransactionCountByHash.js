@@ -59,7 +59,7 @@ describe(method, function(){
                 });
             });
 
-            it('should return '+config.testBlocks.blocks[config.testBlocks.blocks.length-1].transactions.length+' as a hexstring when "latest"', function(done){
+            it('should return '+config.testBlocks.blocks[config.testBlocks.blocks.length-1].transactions.length+' as a hexstring when "latest" (block: '+config.testBlocks.blocks[config.testBlocks.blocks.length-1].blockHeader.hash+')', function(done){
                 asyncTest(host, done, ['latest'], config.testBlocks.blocks[config.testBlocks.blocks.length-1].transactions.length);
             });
 
