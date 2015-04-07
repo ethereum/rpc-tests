@@ -71,6 +71,9 @@ describe(method, function(){
                 asyncTest(host, done, ['latest'], 0);
             });
 
+            it('should return null if the block doesnt exist', function(done){
+                asyncTest(host, done, ['0x534583587638756834765876348756348563487658374587346587'], null);
+            });
 
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done);

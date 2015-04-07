@@ -72,6 +72,10 @@ describe(method, function(){
                 asyncTest(host, done, ['latest'], 0);
             });
 
+            it('should return null if the block doesnt exist', function(done){
+                asyncTest(host, done, [Helpers.fromDecimal(99999)], null);
+            });
+
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done);
             });
