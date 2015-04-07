@@ -17,6 +17,8 @@ Untested:
 - shh_getFilterChanges
 - shh_getMessages
 
+A note on tests: everything in the pending state or which requires newly created logs or transcations can't be tested, as the fixed blockchain is not mining.
+
 
 ## Usage
 
