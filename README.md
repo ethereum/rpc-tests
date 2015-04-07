@@ -8,7 +8,6 @@ Untested:
 - eth_flush
 - eth_compileSolidity
 - eth_getFilterChanges
-- eth_getFilterLogs
 - eth_getLogs
 - eth_getWork
 - eth_submitWork

@@ -66,18 +66,6 @@ describe(method, function(){
             });
 
 
-            it('should return '+config.testBlocks.blocks[config.testBlocks.blocks.length-1].uncleHeaders.length+' as a hexstring when "latest"', function(done){
-                asyncTest(host, done, ['latest'], config.testBlocks.blocks[config.testBlocks.blocks.length-1].uncleHeaders.length);
-            });
-
-            it('should return 0 as a hexstring when "pending"', function(done){
-                asyncTest(host, done, ['latest'], 0);
-            });
-
-            it('should return 0 as a hexstring when "earliest"', function(done){
-                asyncTest(host, done, ['latest'], 0);
-            });
-
             it('should return null if the block doesnt exist', function(done){
                 asyncTest(host, done, ['0x534583587638756834765876348756348563487658374587346587'], null);
             });
