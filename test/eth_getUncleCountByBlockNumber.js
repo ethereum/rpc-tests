@@ -60,7 +60,7 @@ describe(method, function(){
                 });
             });
 
-            it('should return '+config.testBlocks.blocks[config.testBlocks.blocks.length-1].uncleHeaders.length+' as a hexstring when "latest"', function(done){
+            it('should return '+config.testBlocks.blocks[config.testBlocks.blocks.length-1].uncleHeaders.length+' as a hexstring when "latest" (block: '+config.testBlocks.blocks[config.testBlocks.blocks.length-1].blockHeader.hash+')', function(done){
                 asyncTest(host, done, ['latest'], config.testBlocks.blocks[config.testBlocks.blocks.length-1].uncleHeaders.length);
             });
 
@@ -68,7 +68,7 @@ describe(method, function(){
                 asyncTest(host, done, ['latest'], 0);
             });
 
-            it('should return 0 as a hexstring when "earliest"', function(done){
+            it('should return 0 as a hexstring when "earliest" (block: '+config.testBlocks.genesisBlockHeader.hash+')', function(done){
                 asyncTest(host, done, ['latest'], 0);
             });
 
