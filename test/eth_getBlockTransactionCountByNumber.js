@@ -20,9 +20,13 @@ var asyncTest = function(host, done, params, expectedResult){
         
         assert.equal(status, 200, 'has status code');
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
-        assert.isString(result.result, 'is string');
-        assert.match(result.result, /^0x/, 'is hex');
-        assert.isNumber(+result.result, 'can be converted to a number');
+        if(!result.result) {
+            assert.isNull(result.result);
+        } else {
+            assert.isString(result.result, 'is string');
+            assert.match(result.result, /^0x/, 'is hex');
+            assert.isNumber(+result.result, 'can be converted to a number');
+        }
 
         assert.equal(+result.result, expectedResult, 'should be '+ expectedResult);
 
