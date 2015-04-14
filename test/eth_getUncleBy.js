@@ -20,7 +20,7 @@ var syncTest = function(host, method, params, uncle){
         assert.isNull(result.result);
     else {
         assert.isObject(result.result, 'is object');
-        config.blockTest(result.result, uncle);
+        Helpers.blockTest(result.result, uncle);
     }
 };
 

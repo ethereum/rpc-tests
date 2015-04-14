@@ -21,7 +21,7 @@ var syncTest = function(host, method, params, block, index){
         assert.isNull(result.result);
     else {
         assert.isObject(result.result, 'is object');
-        config.transactionTest(result.result, block.transactions[index], index, block);
+        Helpers.transactionTest(result.result, block.transactions[index], index, block);
     }
 };
 

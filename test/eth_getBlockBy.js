@@ -23,12 +23,12 @@ var asyncTest = function(host, done, method, params, block){
         else {
             assert.isObject(result.result, 'is object');
             
-            config.blockTest(result.result, block.blockHeader);
+            Helpers.blockTest(result.result, block.blockHeader);
 
             // test for transaction objects
             if(params[1]) {
                 _.each(result.result.transactions, function(tx, index){
-                    config.transactionTest(tx, block.transactions[index], index, block);
+                    Helpers.transactionTest(tx, block.transactions[index], index, block);
                 });
 
             // test for correct transaction hashes
