@@ -217,7 +217,32 @@ describe(method, function(){
 
                 // get only the logs which have true as the first index arg
                 var newLogs = _.filter(logs, function(log){
-                    return (log.indexArgs[0] === true);
+                    return (log.anonymous && log.indexArgs[0] === true);
+                });
+
+                syncTest(host, optionsFilterId.result, newLogs);
+
+                // remove filter
+                uninstallFilter(host, optionsFilterId.result);
+            });
+
+            it('should return a list of anonymous logs, when filtering by topic "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"', function(){
+                // INSTALL a options filter first
+                var optionsFilterId = Helpers.send(host, {
+                    id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
+                    
+                    // PARAMETERS
+                    params: [{
+                        "fromBlock": '0x0',
+                        "toBlock": 'latest',
+                        "topics": [null, null, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff']
+                    }]
+
+                });
+
+                // get only the logs which have true as the first index arg
+                var newLogs = _.filter(logs, function(log){
+                    return (log.anonymous && log.indexArgs[2] === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
                 });
 
                 syncTest(host, optionsFilterId.result, newLogs);
@@ -235,14 +260,14 @@ describe(method, function(){
                     params: [{
                         "fromBlock": '0x0',
                         "toBlock": 'latest',
-                        "topics": ['0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff']
+                        "topics": [null, null, null, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff']
                     }]
 
                 });
 
                 // get only the logs which have true as the first index arg
                 var newLogs = _.filter(logs, function(log){
-                    return (log.indexArgs[2] === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+                    return (!log.anonymous && log.indexArgs[2] === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
                 });
 
                 syncTest(host, optionsFilterId.result, newLogs);
