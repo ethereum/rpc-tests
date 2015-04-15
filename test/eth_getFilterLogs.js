@@ -4,7 +4,10 @@ var config = require('../lib/config'),
     _ = require('underscore');
 
 // METHOD
-var method = 'eth_getFilterLogs';
+var method = 'eth_getFilterLogs',
+    uninstallFilter = function(host, id) {
+        Helpers.send(host, {id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_uninstallFilter', params: [id] });
+    };
 
 // TEST
 var syncTest = function(host, filterId, logsInfo){
@@ -134,16 +137,10 @@ describe(method, function(){
 
                     });
 
-                    // console.log('#####################');
-                    // console.log('Filter ID', optionsFilterId.result);
-
                     syncTest(host, optionsFilterId.result, [log]);
 
                     // remove filter
-                    var result = Helpers.send(host, {id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_uninstallFilter', params: [optionsFilterId.result] });
-
-                    // console.log('Uninstalled filter', result.result);
-
+                    uninstallFilter(host, optionsFilterId.result);
                 });
 
                 it('should return the correct log, when filtering with address', function(){
@@ -163,8 +160,7 @@ describe(method, function(){
                     syncTest(host, optionsFilterId.result, [log]);
 
                     // remove filter
-                    var result = Helpers.send(host, {id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_uninstallFilter', params: [optionsFilterId.result] });
-
+                    uninstallFilter(host, optionsFilterId.result);
                 });
             });
 
@@ -181,6 +177,9 @@ describe(method, function(){
 
                 });
                 syncTest(host, optionsFilterId.result, logs);
+
+                // remove filter
+                uninstallFilter(host, optionsFilterId.result);
             });
 
             it('should return a list of logs, when filtering with defining an address', function(){
@@ -197,7 +196,61 @@ describe(method, function(){
 
                 });
                 syncTest(host, optionsFilterId.result, logs);
+
+                // remove filter
+                uninstallFilter(host, optionsFilterId.result);
             });
+
+            it('should return a list of logs, when filtering by topic "0x0000000000000000000000000000000000000000000000000000000000000001"', function(){
+                // INSTALL a options filter first
+                var optionsFilterId = Helpers.send(host, {
+                    id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
+                    
+                    // PARAMETERS
+                    params: [{
+                        "fromBlock": '0x0',
+                        "toBlock": 'latest',
+                        "topics": ['0x0000000000000000000000000000000000000000000000000000000000000001']
+                    }]
+
+                });
+
+                // get only the logs which have true as the first index arg
+                var newLogs = _.filter(logs, function(log){
+                    return (log.indexArgs[0] === true);
+                });
+
+                syncTest(host, optionsFilterId.result, newLogs);
+
+                // remove filter
+                uninstallFilter(host, optionsFilterId.result);
+            });
+
+            it('should return a list of logs, when filtering by topic "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"', function(){
+                // INSTALL a options filter first
+                var optionsFilterId = Helpers.send(host, {
+                    id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
+                    
+                    // PARAMETERS
+                    params: [{
+                        "fromBlock": '0x0',
+                        "toBlock": 'latest',
+                        "topics": ['0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff']
+                    }]
+
+                });
+
+                // get only the logs which have true as the first index arg
+                var newLogs = _.filter(logs, function(log){
+                    return (log.indexArgs[2] === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+                });
+
+                syncTest(host, optionsFilterId.result, newLogs);
+
+                // remove filter
+                uninstallFilter(host, optionsFilterId.result);
+            });
+
 
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done);
