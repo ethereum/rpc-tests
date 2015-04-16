@@ -19,7 +19,7 @@ var syncTest = function(host, params, expectedResult){
         
     assert.property(result, 'result', (result.error) ? result.error.message : 'error');
     assert.isString(result.result, 'is string');
-    assert.match(result.result, /^0x/, 'is hex');
+    assert.match(result.result, /^0x/, 'should be HEX starting with 0x');
 
     assert.equal(result.result, expectedResult, 'should match '+ expectedResult);
 

@@ -24,7 +24,7 @@ var asyncTest = function(host, done, params, expectedResult){
             assert.isNull(result.result);
         } else {
             assert.isString(result.result, 'is string');
-            assert.match(result.result, /^0x/, 'is hex');
+            assert.match(result.result, /^0x/, 'should be HEX starting with 0x');
             assert.isNumber(+result.result, 'can be converted to a number');
             assert.equal(+result.result, expectedResult, 'should be '+ expectedResult);
         }
