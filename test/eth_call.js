@@ -117,11 +117,18 @@ describe(method, function(){
             console.log(calls);
 
             _.each(calls, function(call){
-                it('calling '+ call.name +' ('+ call.call +') should return the correct value when the using the correct block ('+ call.blockNumber +') as default block', function(done){
+                it('calling '+ call.name +' ('+ call.call +') should return the correct value, when the using the correct block ('+ call.blockNumber +') as default block', function(done){
                     asyncTest(host, done, [{
                         to: call.to,
                         data: call.call
                     }, Helpers.fromDecimal(call.blockNumber)], call.result, true);
+                });
+
+                it('calling '+ call.name +' ('+ call.call +') should return "0x", when using the wrong block ('+ call.blockNumber +') as default block', function(done){
+                    asyncTest(host, done, [{
+                        to: call.to,
+                        data: call.call
+                    }, Helpers.fromDecimal(call.blockNumber-1)], call.result, true);
                 });
             });
 
