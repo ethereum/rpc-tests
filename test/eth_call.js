@@ -8,7 +8,7 @@ var method = 'eth_call';
 
 
 // TEST
-var asyncTest = function(host, done, params, expectedResult, isAddress){
+var asyncTest = function(host, done, params, expectedResult, type, call){
     Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
         
@@ -17,14 +17,17 @@ var asyncTest = function(host, done, params, expectedResult, isAddress){
 
     }, function(result, status) {
 
-        
         assert.equal(status, 200, 'has status code');
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
         assert.isString(result.result, 'should be a string');
         assert.match(result.result, /^0x/, 'should be HEX starting with 0x');
-        assert.equal(result.result.length, 66, 'should be 64 Bytes long');
 
-        if(isAddress)
+        if(type === 'empty')
+            assert.equal(result.result, expectedResult, 'should be "0x"');
+        else
+            assert.equal(result.result.length, 66, 'should be 32 Bytes long');
+
+        if(type === 'getAddress')
             assert.equal(result.result.slice(-20), expectedResult.slice(-20), 'should return '+ expectedResult.slice(-20));
         else
             assert.equal(result.result, expectedResult, 'should return '+ expectedResult);
@@ -114,27 +117,32 @@ describe(method, function(){
                 return call;
             });
 
-            console.log(calls);
-
             _.each(calls, function(call){
                 it('calling '+ call.name +' ('+ call.call +') should return the correct value, when the using the correct block ('+ call.blockNumber +') as default block', function(done){
                     asyncTest(host, done, [{
                         to: call.to,
                         data: call.call
-                    }, Helpers.fromDecimal(call.blockNumber)], call.result, true);
+                    }, Helpers.fromDecimal(call.blockNumber)], call.result, call.name);
                 });
 
-                it('calling '+ call.name +' ('+ call.call +') should return "0x", when using the wrong block ('+ call.blockNumber +') as default block', function(done){
+                it('calling '+ call.name +' ('+ call.call +') should return "0x0000000000000000000000000000000000000000000000000000000000000000", when using the wrong block ('+ call.blockNumber - 1 +') as default block', function(done){
                     asyncTest(host, done, [{
                         to: call.to,
                         data: call.call
-                    }, Helpers.fromDecimal(call.blockNumber-1)], call.result, true);
+                    }, Helpers.fromDecimal(call.blockNumber -1)], '0x0000000000000000000000000000000000000000000000000000000000000000', null, call);
+                });
+
+                it('calling '+ call.name +' ('+ call.call +') should return "0x", when using a block (0) where no contract is deployed', function(done){
+                    asyncTest(host, done, [{
+                        to: call.to,
+                        data: call.call
+                    }, '0x0'], '0x', 'empty');
                 });
             });
 
-            // it('should return an error when no parameter is passed', function(done){
-            //     asyncErrorTest(host, done);
-            // });
+            it('should return an error when no parameter is passed', function(done){
+                asyncErrorTest(host, done);
+            });
         });
     });
 });
