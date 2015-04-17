@@ -75,7 +75,7 @@ Run the following c++ cli command to load the `RPC_API_Test` test:
 
 Run the following python cli command to load the `RPC_API_Test` test:
 
-    $ pyethapp -c jsonrpc.listen_port=8081 -l jsonrpc:debug blocktest <pathToTheTestRepo>/BlockTests/bcRPC_API_Test.json RPC_API_Test
+    $ pyethapp -l :info,eth.chainservice:debug,jsonrpc:debug -c jsonrpc.listen_port=8081 -c p2p.max_peers=0 -c p2p.min_peers=0 blocktest <pathToTheTestRepo>/BlockTests/bcRPC_API_Test.json RPC_API_Test
 
 ## License
 
