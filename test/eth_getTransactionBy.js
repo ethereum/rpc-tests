@@ -115,6 +115,18 @@ describe(method3, function(){
                 });
             });
 
+            it('should return no trasnactions at the genisis block when using "earliest"', function(){
+                syncTest(host, method3, ['earliest', '0x0'], null);
+            });
+
+            it('should return one transaction at 0 for the last block when using "latest"', function(){
+                syncTest(host, method3, ['latest', '0x0'], config.testBlocks.blocks[config.testBlocks.blocks.length-1], 0);
+            });
+
+            it('should return no trasnactions for the pending block when using "pending"', function(){
+                syncTest(host, method3, ['pending', '0x0'], null);
+            });
+
             it('should return null when no transaction was found', function(){
                 syncTest(host, method3, ['0x2', '0xb'], null);
             });

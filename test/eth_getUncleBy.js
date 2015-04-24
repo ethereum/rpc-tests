@@ -88,6 +88,19 @@ describe(method2, function(){
             it('should return null when no uncle was found', function(){
                 syncTest(host, method2, ['0x2', '0xbbb'], null);
             });
+
+            it('should return a no uncles when using "earliest"', function(){
+                syncTest(host, method2, ['earliest', '0x0'], null);
+            });
+
+            it('should return a no uncles when using "latest" (as there are none)', function(){
+                syncTest(host, method2, ['latest', '0x0'], null);
+            });
+
+            it('should return a no uncles when using "pending" (as there are none)', function(){
+                syncTest(host, method2, ['pending', '0x0'], null);
+            });
+
             it('should return an error when the wrong parameters is passed', function(done){
                 asyncErrorTest(host, done, method2, ['0x878a132155f53adb7c993ded4cfb687977397d63d873fcdbeb06c18cac907a5c']);
             });
