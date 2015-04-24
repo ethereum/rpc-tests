@@ -8,10 +8,6 @@ Helpers.eachHost(function(key, host){
         // remove offline host from config
         delete config.hosts[Helpers.getKeyByValue(config.hosts, host)];
 
-        describe(key, function(){
-            it('should connect', function(){
-                throw new Error('Can\'t connect to '+ host);
-            });
-        });
+        console.log('Can\'t connect to '+ key + ' at '+  host);
     }
 });
