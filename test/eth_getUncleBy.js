@@ -58,10 +58,10 @@ describe(method1, function(){
             });
 
             it('should return null when no uncle was found', function(){
-                syncTest(host, method1, ['0x534583587638756834765876348756348563487658374587346587', '0xb'], null);
+                syncTest(host, method1, ['0x878a132155f53adb7c993ded4cfb687977397d63d873fcdbeb06c18cac907a5c', '0xb'], null);
             });
             it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method1, ['0x534583587638756834765876348756348563487658374587346587']);
+                asyncErrorTest(host, done, method1, ['0x878a132155f53adb7c993ded4cfb687977397d63d873fcdbeb06c18cac907a5c']);
             });
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done, method1, []);
@@ -89,7 +89,7 @@ describe(method2, function(){
                 syncTest(host, method2, ['0x2', '0xbbb'], null);
             });
             it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method2, ['0x534583587638756834765876348756348563487658374587346587']);
+                asyncErrorTest(host, done, method2, ['0x878a132155f53adb7c993ded4cfb687977397d63d873fcdbeb06c18cac907a5c']);
             });
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done, method2, []);
