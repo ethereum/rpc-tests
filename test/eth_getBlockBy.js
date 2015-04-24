@@ -122,10 +122,10 @@ describe(method2, function(){
             });
 
             it('should return null when no block was found', function(done){
-                asyncTest(host, done, method2, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d', true], null);
+                asyncTest(host, done, method2, ['0x878a132155f53adb7c993ded4cfb687977397d63d873fcdbeb06c18cac907a5c', true], null);
             });
             it('should return an error when the wrong parameters is passed', function(done){
-                asyncErrorTest(host, done, method2, ['0xd2f1575105fd2272914d77355b8dab5afbdde4b012abd849e8b32111be498b0d']);
+                asyncErrorTest(host, done, method2, ['0x878a132155f53adb7c993ded4cfb687977397d63d873fcdbeb06c18cac907a5c']);
             });
             it('should return an error when no parameter is passed', function(done){
                 asyncErrorTest(host, done, method2, []);

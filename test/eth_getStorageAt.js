@@ -56,6 +56,8 @@ describe(method, function(){
 
             _.each(config.testBlocks.postState, function(state, key){
                 _.each(state.storage, function(storage, index){
+                    // fix block test file
+                    index = index.replace('0x0','0x');
                     it('should return '+ storage +' when the defaultBlock is "latest" for storage position '+ index +' at address 0x'+ key, function(done){
                         asyncTest(host, done, [
                             '0x'+ key,
@@ -68,6 +70,8 @@ describe(method, function(){
 
             _.each(config.testBlocks.pre, function(state, key){
                 _.each(state.storage, function(storage, index){
+                    // fix block test file
+                    index = index.replace('0x0','0x');
                     it('should return '+ storage +' when the defaultBlock is 0 for storage position '+ index +' at address 0x'+ key, function(done){
                         asyncTest(host, done, [
                             '0x' + key,

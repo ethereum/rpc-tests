@@ -54,7 +54,7 @@ describe(method, function(){
                 asyncTest(host, done, [
                     'myDb',
                     'myKey',
-                    '0x4545bf324'
+                    '0x4545b1f324'
                     ], true);
             });
 
