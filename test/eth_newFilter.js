@@ -74,7 +74,7 @@ describe(method, function(){
                     "fromBlock": "0x1", // 1
                     "toBlock": "0x2", // 2
                     "address": "0xfd9801e0aa27e54970936aa910a7186fdf5549bc",
-                    "topics": ['0x01e0aa27e54970936aa910a71', '0x6aa910a7186fdf']
+                    "topics": ['0x01e0aa27e54970936aa910a713', '0x6aa910a7186fdf']
                 });
             });
 
@@ -83,7 +83,7 @@ describe(method, function(){
                     "fromBlock": "0x1", // 1
                     "toBlock": "0x2", // 2
                     "address": ["0xfd9801e0aa27e54970936aa910a7186fdf5549bc", "0xab9801e0aa27e54970936aa910a7186fdf5549bc"],
-                    "topics": ['0x01e0aa27e54970936aa910a71', '0x6aa910a7186fdf']
+                    "topics": ['0x01e0aa27e54970936aa910a713', '0x6aa910a7186fdf']
                 });
             });
 
@@ -92,7 +92,7 @@ describe(method, function(){
                     "fromBlock": "latest",
                     "toBlock": "pending",
                     "address": "0xfd9801e0aa27e54970936aa910a7186fdf5549bc",
-                    "topics": ['0x01e0aa27e54970936aa910a71', '0x6aa910a7186fdf']
+                    "topics": ['0x01e0aa27e54970936aa910a713', '0x6aa910a7186fdf']
                 });
             });
 
