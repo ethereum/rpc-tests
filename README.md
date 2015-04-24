@@ -4,11 +4,8 @@
 Untested:
 
 - eth_sendTransaction
-- eth_call
-- eth_flush
 - eth_compileSolidity
 - eth_getFilterChanges
-- eth_getLogs
 - eth_getWork
 - eth_submitWork
 - shh_post
