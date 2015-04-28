@@ -53,77 +53,7 @@ describe(method, function(){
         // OPTIONS FILTER
         describe(key, function(){
 
-            var logs = [{
-                call: '0x9dc2c8f5',
-                anonymous: true,
-                indexArgs: [true, 'msg.sender', '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'],
-                args: [-23, 42]
-            },{
-                call: '0xfd408767',
-                anonymous: false,
-                indexArgs: [true, 'msg.sender', '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'],
-                args: [-23, 42]
-            },{
-                call: '0xe8beef5b',
-                anonymous: true,
-                indexArgs: [true, 'msg.sender', '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'],
-                args: [42]
-            },{
-                call: '0xf38b0600',
-                anonymous: false,
-                indexArgs: [true, 'msg.sender', '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'],
-                args: [42]
-            },{
-                call: '0x76bc21d9',
-                anonymous: true,
-                indexArgs: [true, 'msg.sender'],
-                args: [42]
-            },{
-                call: '0x102accc1',
-                anonymous: false,
-                indexArgs: [true, 'msg.sender'],
-                args: [42]
-            },{
-                call: '0x4e7ad367',
-                anonymous: true,
-                indexArgs: [true],
-                args: [42]
-            },{
-                call: '0xb61c0503',
-                anonymous: false,
-                indexArgs: [true],
-                args: [42]
-            },{
-                call: '0xa6780857',
-                anonymous: true,
-                indexArgs: [],
-                args: [42]
-            },{
-                call: '0x65538c73',
-                anonymous: false,
-                indexArgs: [],
-                args: [42]
-            }];
-            // add the log.block, log.tx and log.txIndex
-            logs = _.map(logs, function(log){
-                var transaction = null,
-                    txIndex = null;
-                log.block = _.find(config.testBlocks.blocks, function(block){
-                    return _.find(block.transactions, function(tx, index){
-                        if (tx.data === log.call){
-                            transaction = tx;
-                            txIndex = index;
-                            return true;
-                        } else
-                            return false;
-                    });
-                });
-                log.tx = transaction;
-                log.txIndex = txIndex;
-                return log;
-            });
-
-            _.each(logs, function(log){
+            _.each(config.logs, function(log){
                 it('should return the correct log, when filtering without defining an address', function(){
                     // INSTALL a options filter first
                     var optionsFilterId = Helpers.send(host, {
@@ -176,7 +106,7 @@ describe(method, function(){
                     }]
 
                 });
-                syncTest(host, optionsFilterId.result, logs);
+                syncTest(host, optionsFilterId.result, config.logs);
 
                 // remove filter
                 uninstallFilter(host, optionsFilterId.result);
@@ -191,11 +121,11 @@ describe(method, function(){
                     params: [{
                         "fromBlock": '0x0',
                         "toBlock": 'latest',
-                        'address': "0x"+ logs[0].tx.to
+                        'address': "0x"+ config.logs[0].tx.to
                     }]
 
                 });
-                syncTest(host, optionsFilterId.result, logs);
+                syncTest(host, optionsFilterId.result, config.logs);
 
                 // remove filter
                 uninstallFilter(host, optionsFilterId.result);
@@ -216,7 +146,7 @@ describe(method, function(){
                 });
 
                 // get only the logs which have true as the first index arg
-                var newLogs = _.filter(logs, function(log){
+                var newLogs = _.filter(config.logs, function(log){
                     return (log.anonymous && log.indexArgs[0] === true);
                 });
 
@@ -241,7 +171,7 @@ describe(method, function(){
                 });
 
                 // get only the logs which have true as the first index arg
-                var newLogs = _.filter(logs, function(log){
+                var newLogs = _.filter(config.logs, function(log){
                     return (log.anonymous && log.indexArgs[2] === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
                 });
 
@@ -266,7 +196,7 @@ describe(method, function(){
                 });
 
                 // get only the logs which have true as the first index arg
-                var newLogs = _.filter(logs, function(log){
+                var newLogs = _.filter(config.logs, function(log){
                     return (!log.anonymous && log.indexArgs[2] === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
                 });
 
