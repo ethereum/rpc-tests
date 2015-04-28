@@ -125,7 +125,7 @@ describe(method3, function(){
                 syncTest(host, method3, ['latest', '0x0'], config.testBlocks.blocks[config.testBlocks.blocks.length-1], 0);
             });
 
-            it('should return transactions for the pending block when using "pending" and sending transactions before', function(){
+            it('should return transactions for the pending block when using "pending" and sending transactions before', function(done){
 
                 // send transaction
                 Helpers.send(host, {
@@ -140,7 +140,12 @@ describe(method3, function(){
 
                 });
 
-                syncTest(host, method3, ['pending', '0x0'], 'pending');
+                setTimeout(function(){
+
+                    syncTest(host, method3, ['pending', '0x0'], 'pending');
+
+                    done();
+                }, 1000);
             });
 
             it('should return null when no transaction was found', function(){
