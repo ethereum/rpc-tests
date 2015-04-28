@@ -19,6 +19,8 @@ var syncTest = function(host, method, params, block, index){
 
     if(!block)
         assert.isNull(result.result);
+    else if(block === 'pending')
+        assert.isObject(result.result, 'is object');
     else {
         assert.isObject(result.result, 'is object');
         Helpers.transactionTest(result.result, block.transactions[index], index, block);
@@ -115,7 +117,7 @@ describe(method3, function(){
                 });
             });
 
-            it('should return no trasnactions at the genisis block when using "earliest"', function(){
+            it('should return no transactions at the genisis block when using "earliest"', function(){
                 syncTest(host, method3, ['earliest', '0x0'], null);
             });
 
@@ -123,8 +125,22 @@ describe(method3, function(){
                 syncTest(host, method3, ['latest', '0x0'], config.testBlocks.blocks[config.testBlocks.blocks.length-1], 0);
             });
 
-            it('should return no trasnactions for the pending block when using "pending"', function(){
-                syncTest(host, method3, ['pending', '0x0'], null);
+            it('should return transactions for the pending block when using "pending" and sending transactions before', function(){
+
+                // send transaction
+                Helpers.send(host, {
+                    id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_sendTransaction',
+                    
+                    // PARAMETERS
+                    params: [{
+                        "from": config.senderAddress,
+                        "to": config.contractAddress,
+                        "value" : 0,
+                    }]
+
+                });
+
+                syncTest(host, method3, ['pending', '0x0'], 'pending');
             });
 
             it('should return null when no transaction was found', function(){
