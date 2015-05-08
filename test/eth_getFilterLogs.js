@@ -94,7 +94,7 @@ describe(method, function(){
                 });
             });
 
-            it('should return a list of logs, when asking without defining an address', function(){
+            it('should return a list of logs, when asking without defining an address and using toBlock "latest"', function(){
                 // INSTALL a options filter first
                 var optionsFilterId = Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
@@ -112,7 +112,25 @@ describe(method, function(){
                 uninstallFilter(host, optionsFilterId.result);
             });
 
-            it('should return a list of logs, when filtering with defining an address', function(){
+            it('should return a list of logs, when asking without defining an address and using toBlock "pending"', function(){
+                // INSTALL a options filter first
+                var optionsFilterId = Helpers.send(host, {
+                    id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
+                    
+                    // PARAMETERS
+                    params: [{
+                        "fromBlock": '0x0',
+                        "toBlock": 'pending'
+                    }]
+
+                });
+                syncTest(host, optionsFilterId.result, config.logs);
+
+                // remove filter
+                uninstallFilter(host, optionsFilterId.result);
+            });
+
+            it('should return a list of logs, when filtering with defining an address and using toBlock "latest"', function(){
                 // INSTALL a options filter first
                 var optionsFilterId = Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
@@ -121,6 +139,25 @@ describe(method, function(){
                     params: [{
                         "fromBlock": '0x0',
                         "toBlock": 'latest',
+                        'address': "0x"+ config.logs[0].tx.to
+                    }]
+
+                });
+                syncTest(host, optionsFilterId.result, config.logs);
+
+                // remove filter
+                uninstallFilter(host, optionsFilterId.result);
+            });
+
+            it('should return a list of logs, when filtering with defining an address and using toBlock "pending"', function(){
+                // INSTALL a options filter first
+                var optionsFilterId = Helpers.send(host, {
+                    id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
+                    
+                    // PARAMETERS
+                    params: [{
+                        "fromBlock": '0x0',
+                        "toBlock": 'pending',
                         'address': "0x"+ config.logs[0].tx.to
                     }]
 

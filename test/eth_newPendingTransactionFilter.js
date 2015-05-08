@@ -4,7 +4,7 @@ var config = require('../lib/config'),
     currentFilterId = null;
 
 // METHOD
-var method = 'eth_newBlockFilter';
+var method = 'eth_newPendingTransactionFilter';
 
 
 // TEST
