@@ -72,13 +72,10 @@ describe(method, function(){
                 asyncTest(host, done);
             });
 
-            it('should return an error when a wrong parameter is passed', function(done){
-                asyncErrorTest(host, done, 'something');
-            });
-
-            it('should return an error when a wrong parameter is passed', function(done){
-                asyncErrorTest(host, done, 23);
-            });
+            // TODO test again?
+            // it('should return an error when a parameter is passed', function(done){
+            //     asyncErrorTest(host, done, 'something');
+            // });
         });
     });
 });
