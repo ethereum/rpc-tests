@@ -37,12 +37,12 @@ var asyncTest = function(host, done, params, expectedResult, type, call){
 };
 
 
-var asyncErrorTest = function(host, done){
+var asyncErrorTest = function(host, done, param){
     Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
         
         // PARAMETERS
-        params: []
+        params: param
 
     }, function(result, status) {
 
@@ -141,8 +141,12 @@ describe(method, function(){
             });
 
             it('should return an error when no parameter is passed', function(done){
-                asyncErrorTest(host, done);
+                asyncErrorTest(host, done, []);
             });
+
+            // it('should return an error when no second parameter is passed', function(done){
+            //     asyncErrorTest(host, done, [{to: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b'}]);
+            // });
         });
     });
 });
