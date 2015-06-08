@@ -22,18 +22,15 @@ var asyncTest = function(host, done, method, params, block){
             assert.isNull(result.result);
         else if(block === 'pending') {
 
-            assert.match(result.result.hash, /^0x/, 'block hash should start with 0x');
+            assert.isNull(result.result.hash, 'block hash should be null');
+            assert.isNull(result.result.nonce, 'block nonce should be null');
+            assert.isNull(result.result.logsBloom, 'block logsBloom should be null');
+            assert.isNull(result.result.miner, 'block miner should be null');
             assert.match(result.result.parentHash, /^0x/, 'parentHash should start with 0x');
             assert.match(result.result.sha3Uncles, /^0x/, 'sha3Uncles should start with 0x');
             assert.match(result.result.stateRoot, /^0x/, 'stateRoot should start with 0x');
             assert.match(result.result.transactionsRoot, /^0x/, 'transactionsRoot should start with 0x');
             assert.match(result.result.parentHash, /^0x/, 'block hash should start with 0x');
-            assert.equal(result.result.miner, '0x0000000000000000000000000000000000000000', 'nonce should be 0x0000000000000000000000000000000000000000');
-            assert.equal(result.result.logsBloom, '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000','logsBloom should be 512 bytes');
-            assert.equal(result.result.nonce, '0x0000000000000000','nonce should be 0x0000000000000000');
-            // assert.isNull(result.result.miner, 'miner should be null');
-            // assert.isNull(result.result.logsBloom, 'logsBloom should be null');
-            // assert.isNull(result.result.nonce, 'nonce should be null');
 
         } else {
             assert.isObject(result.result, 'is object');
@@ -110,11 +107,11 @@ describe(method1, function(){
                 asyncTest(host, done, method1, ['earliest', false], {blockHeader: config.testBlocks.genesisBlockHeader, transactions: [], uncleHeaders: []});
             });
 
-            it('should return a the last block when using "latest"', function(done){
+            it('should return the last block when using "latest"', function(done){
                 asyncTest(host, done, method1, ['latest', false], config.testBlocks.blocks[config.testBlocks.blocks.length-1]);
             });
 
-            it('should return a the pending block when using "pending"', function(done){
+            it('should return the pending block when using "pending"', function(done){
                 asyncTest(host, done, method1, ['pending', false], 'pending');
             });
 
