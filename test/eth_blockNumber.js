@@ -21,7 +21,11 @@ var asyncTest = function(host, done){
         assert.match(result.result, /^0x/, 'should be HEX starting with 0x');
         assert.isNumber(+result.result, 'can be converted to a number');
 
-        assert.equal(+result.result, config.testBlocks.blocks.length,'can be converted to a number');
+        var expectedBlockNumber = config.testBlocks.blocks.reduce(function (acc, current) {
+            return Math.max(acc, current.blockHeader.number); // let's take the longest chain
+        }, 0);
+
+        assert.equal(+result.result, expectedBlockNumber, 'can be converted to a number');
 
         done();
     });
