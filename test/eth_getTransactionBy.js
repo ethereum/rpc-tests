@@ -22,7 +22,7 @@ var syncTest = function(host, method, params, block, index){
     else if(block === 'pending')
         assert.isObject(result.result, 'is object');
     else {
-        assert.isObject(result.result, 'is object');
+        assert.isObject(result.result, 'expected transaction to be an object. transaction location: ' + block.blockHeader.hash + ', ' + index);
         Helpers.transactionTest(result.result, block.transactions[index], index, block);
     }
 };
