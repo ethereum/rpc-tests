@@ -109,7 +109,7 @@ describe(method3, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            _.each(config.testBlocks.blocks, function(bl){
+            _.each(config.testBlocks.blocks.filter(function (block) { return block.reverted !== true }), function(bl){
                 _.each(bl.transactions, function(tx, index){
                     it('should return a transaction with the proper structure', function(){
                         syncTest(host, method3, [Helpers.fromDecimal(bl.blockHeader.number), Helpers.fromDecimal(index)], bl, index);
