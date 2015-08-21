@@ -106,6 +106,7 @@ describe(method, function(){
                     }]
 
                 });
+
                 syncTest(host, optionsFilterId.result, config.logs);
 
                 // remove filter

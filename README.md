@@ -24,7 +24,7 @@ A note on tests: everything in the pending state or which requires newly created
 3. `$ git submodule update --init`
 4. `$ npm install`
 5. start a local CPP node at `http://localhost:8080` and local GO node at `http://localhost:8545`
-6. The nodes need the following state to work: https://github.com/ethereum/tests/blob/develop/BlockTests/bcRPC_API_Test.json
+6. The nodes need the following state to work: https://github.com/ethereum/tests/blob/develop/BlockchainTests/bcRPC_API_Test.json
 
 **NOTE** If you run the tests make sure you update the `lib/tests` submodule as well as the `tests` repository, which you use to load the blockchain state so that both are in the same state.
 
@@ -66,20 +66,20 @@ To load a fixed state, clone the ethereum test repo as follows:
 
 Run the following go cli command to load the `RPC_API_Test` test:
 
-    $ geth --shh blocktest <pathToTheTestRepo>/BlockTests/bcRPC_API_Test.json RPC_API_Test rpc
+    $ geth --shh blocktest <pathToTheTestRepo>/lib/tests/BlockchainTests/bcRPC_API_Test.json RPC_API_Test rpc
 
 #### C++
 
 
 Run the following c++ cli command to load the `RPC_API_Test` test:
 
-    $ ethrpctest --json <pathToTheTestRepo>/BlockTests/bcRPC_API_Test.json --test RPC_API_Test
+    $ ethrpctest --json <pathToTheTestRepo>/lib/tests/BlockchainTests/bcRPC_API_Test.json --test RPC_API_Test
 
 #### Python
 
 Run the following python cli command to load the `RPC_API_Test` test:
 
-    $ pyethapp -l :info,eth.chainservice:debug,jsonrpc:debug -c jsonrpc.listen_port=8081 -c p2p.max_peers=0 -c p2p.min_peers=0 blocktest <pathToTheTestRepo>/BlockTests/bcRPC_API_Test.json RPC_API_Test
+    $ pyethapp -l :info,eth.chainservice:debug,jsonrpc:debug -c jsonrpc.listen_port=8081 -c p2p.max_peers=0 -c p2p.min_peers=0 blocktest <pathToTheTestRepo>/lib/tests/BlockchainTests/bcRPC_API_Test.json RPC_API_Test
 
 ## License
 

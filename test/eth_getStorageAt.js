@@ -23,6 +23,8 @@ var asyncTest = function(host, done, params, expectedResult){
         assert.isString(result.result, 'is string');
         assert.match(result.result, /^0x/, 'should be HEX starting with 0x');
 
+        expectedResult = Helpers.padLeft(expectedResult, 64);
+
         assert.equal(result.result, expectedResult, 'should match '+ expectedResult);
 
         done();

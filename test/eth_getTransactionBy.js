@@ -25,7 +25,7 @@ var syncTest = function(host, method, params, block, index){
         assert.isNull(result.blockNumber);
         assert.isNull(result.blockHash);
     } else {
-        assert.isObject(result.result, 'is object');
+        assert.isObject(result.result, 'expected transaction to be an object. transaction location: ' + block.blockHeader.hash + ', ' + index);
         Helpers.transactionTest(result.result, block.transactions[index], index, block);
     }
 };
@@ -112,7 +112,7 @@ describe(method3, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            _.each(config.testBlocks.blocks, function(bl){
+            _.each(config.testBlocks.blocks.filter(function (block) { return block.reverted !== true }), function(bl){
                 _.each(bl.transactions, function(tx, index){
                     it('should return a transaction with the proper structure', function(){
                         syncTest(host, method3, [Helpers.fromDecimal(bl.blockHeader.number), Helpers.fromDecimal(index)], bl, index);
@@ -142,8 +142,6 @@ describe(method3, function(){
                     }]
 
                 });
-
-                console.log(res);
 
                 setTimeout(function(){
 
