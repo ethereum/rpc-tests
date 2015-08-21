@@ -94,7 +94,7 @@ describe(method1, function(){
     Helpers.eachHost(function(key, host){
         describe(key, function(){
 
-            _.each(config.testBlocks.blocks, function(block){
+            _.each(config.testBlocks.blocks.filter(function (block) { return block.reverted !== true; }), function(block){
 
                 it('should return a block with the proper structure, containing array of transaction objects', function(done){
                     asyncTest(host, done, method1, [Helpers.fromDecimal(block.blockHeader.number), true], block);
