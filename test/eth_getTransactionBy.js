@@ -19,9 +19,12 @@ var syncTest = function(host, method, params, block, index){
 
     if(!block)
         assert.isNull(result.result);
-    else if(block === 'pending')
+    else if(block === 'pending') {
         assert.isObject(result.result, 'is object');
-    else {
+        assert.isNull(result.transactionIndex);
+        assert.isNull(result.blockNumber);
+        assert.isNull(result.blockHash);
+    } else {
         assert.isObject(result.result, 'is object');
         Helpers.transactionTest(result.result, block.transactions[index], index, block);
     }
@@ -128,17 +131,19 @@ describe(method3, function(){
             it('should return transactions for the pending block when using "pending" and sending transactions before', function(done){
 
                 // send transaction
-                Helpers.send(host, {
+                var res= Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_sendTransaction',
                     
                     // PARAMETERS
                     params: [{
                         "from": config.senderAddress,
                         "to": config.contractAddress,
-                        "value" : 0,
+                        "value" : 0
                     }]
 
                 });
+
+                console.log(res);
 
                 setTimeout(function(){
 

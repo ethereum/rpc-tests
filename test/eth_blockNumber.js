@@ -21,7 +21,7 @@ var asyncTest = function(host, done){
         assert.match(result.result, /^0x/, 'should be HEX starting with 0x');
         assert.isNumber(+result.result, 'can be converted to a number');
 
-        assert.equal(+result.result, config.testBlocks.blocks.length,'can be converted to a number');
+        assert.equal(+result.result, config.testBlocks.blocks.length, 'should have the right length');
 
         done();
     });
