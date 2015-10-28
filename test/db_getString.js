@@ -7,20 +7,22 @@ var method = 'db_getString';
 
 
 // TEST
-var syncTest = function(host, params, expectedResult){
-    var result = Helpers.send(host, {
+var asyncTest = function(host, params, expectedResult, done){
+    Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
         
         // PARAMETERS
         params: params
 
+    }, function(result, status) {
+
+        assert.property(result, 'result', (result.error) ? result.error.message : 'error');
+        assert.isString(result.result, 'is string');
+
+        assert.equal(result.result, expectedResult, 'should match '+ expectedResult);
+
+        done();
     });
-
-        
-    assert.property(result, 'result', (result.error) ? result.error.message : 'error');
-    assert.isString(result.result, 'is string');
-
-    assert.equal(result.result, expectedResult, 'should match '+ expectedResult);
 
 };
 
@@ -48,7 +50,7 @@ describe(method, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return the previously stored value', function(){
+            it('should return the previously stored value', function(done){
                 var randomString = Math.random().toString();
 
                 Helpers.send(host, {
@@ -61,12 +63,14 @@ describe(method, function(){
                     randomString
                     ]
 
+                }, function(){
+
+                    asyncTest(host, [
+                        'myDb',
+                        'myKey'
+                        ], randomString, done);
                 });
 
-                syncTest(host, [
-                    'myDb',
-                    'myKey'
-                    ], randomString);
             });
 
             it('should return an error when no parameter is passed', function(done){

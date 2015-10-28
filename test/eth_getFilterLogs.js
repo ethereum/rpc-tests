@@ -6,26 +6,30 @@ var config = require('../lib/config'),
 // METHOD
 var method = 'eth_getFilterLogs',
     uninstallFilter = function(host, id) {
-        Helpers.send(host, {id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_uninstallFilter', params: [id] });
+        Helpers.send(host, {id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_uninstallFilter', params: [id] }, function(){});
     };
 
 // TEST
-var syncTest = function(host, filterId, logsInfo){
+var asyncTest = function(host, filterId, logsInfo, done){
 
-    var result = Helpers.send(host, {
+    Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
         
         // PARAMETERS
         params: [filterId]
 
+    }, function(result, status){
+
+        assert.property(result, 'result', (result.error) ? result.error.message : 'error');
+        assert.equal(result.result.length, logsInfo.length, 'logs should be '+ logsInfo.length);
+
+        _.each(result.result, function(log, index){
+            Helpers.logTest(log, logsInfo[index]);
+        });
+
+        done();
     });
         
-    assert.property(result, 'result', (result.error) ? result.error.message : 'error');
-    assert.equal(result.result.length, logsInfo.length, 'logs should be '+ logsInfo.length);
-
-    _.each(result.result, function(log, index){
-        Helpers.logTest(log, logsInfo[index]);
-    });
 };
 
 var asyncErrorTest = function(host, done, param){
@@ -54,9 +58,9 @@ describe(method, function(){
         describe(key, function(){
 
             _.each(config.logs, function(log){
-                it('should return the correct log, when filtering without defining an address', function(){
+                it('should return the correct log, when filtering without defining an address', function(done){
                     // INSTALL a options filter first
-                    var optionsFilterId = Helpers.send(host, {
+                    Helpers.send(host, {
                         id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
                         
                         // PARAMETERS
@@ -65,17 +69,23 @@ describe(method, function(){
                             "toBlock": Helpers.fromDecimal(log.block.blockHeader.number)
                         }]
 
+                    }, function(optionsFilterId){
+
+                        asyncTest(host, optionsFilterId.result, [log], function(){
+
+                            // remove filter
+                            uninstallFilter(host, optionsFilterId.result);
+
+                            done();
+                        });
                     });
 
-                    syncTest(host, optionsFilterId.result, [log]);
 
-                    // remove filter
-                    uninstallFilter(host, optionsFilterId.result);
                 });
 
-                it('should return the correct log, when filtering with address', function(){
+                it('should return the correct log, when filtering with address', function(done){
                     // INSTALL a options filter first
-                    var optionsFilterId = Helpers.send(host, {
+                    Helpers.send(host, {
                         id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
                         
                         // PARAMETERS
@@ -85,18 +95,24 @@ describe(method, function(){
                             "toBlock": Helpers.fromDecimal(log.block.blockHeader.number)
                         }]
 
+                    }, function(optionsFilterId){
+
+                        asyncTest(host, optionsFilterId.result, [log], function(){
+
+                            // remove filter
+                            uninstallFilter(host, optionsFilterId.result);
+
+                            done();
+                        });
+
                     });
 
-                    syncTest(host, optionsFilterId.result, [log]);
-
-                    // remove filter
-                    uninstallFilter(host, optionsFilterId.result);
                 });
             });
 
-            it('should return a list of logs, when asking without defining an address and using toBlock "latest"', function(){
+            it('should return a list of logs, when asking without defining an address and using toBlock "latest"', function(done){
                 // INSTALL a options filter first
-                var optionsFilterId = Helpers.send(host, {
+                Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
                     
                     // PARAMETERS
@@ -105,17 +121,21 @@ describe(method, function(){
                         "toBlock": 'latest'
                     }]
 
+                }, function(optionsFilterId){
+
+                    asyncTest(host, optionsFilterId.result, config.logs, function(){
+
+                        // remove filter
+                        uninstallFilter(host, optionsFilterId.result);
+
+                        done();
+                    });
                 });
-
-                syncTest(host, optionsFilterId.result, config.logs);
-
-                // remove filter
-                uninstallFilter(host, optionsFilterId.result);
             });
 
-            it('should return a list of logs, when asking without defining an address and using toBlock "pending"', function(){
+            it('should return a list of logs, when asking without defining an address and using toBlock "pending"', function(done){
                 // INSTALL a options filter first
-                var optionsFilterId = Helpers.send(host, {
+                Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
                     
                     // PARAMETERS
@@ -124,16 +144,21 @@ describe(method, function(){
                         "toBlock": 'pending'
                     }]
 
-                });
-                syncTest(host, optionsFilterId.result, config.logs);
+                }, function(optionsFilterId){
 
-                // remove filter
-                uninstallFilter(host, optionsFilterId.result);
+                    asyncTest(host, optionsFilterId.result, config.logs, function(){
+
+                        // remove filter
+                        uninstallFilter(host, optionsFilterId.result);
+
+                        done();
+                    });
+                });
             });
 
-            it('should return a list of logs, when filtering with defining an address and using toBlock "latest"', function(){
+            it('should return a list of logs, when filtering with defining an address and using toBlock "latest"', function(done){
                 // INSTALL a options filter first
-                var optionsFilterId = Helpers.send(host, {
+                Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
                     
                     // PARAMETERS
@@ -143,16 +168,21 @@ describe(method, function(){
                         'address': "0x"+ config.logs[0].tx.to
                     }]
 
-                });
-                syncTest(host, optionsFilterId.result, config.logs);
+                }, function(optionsFilterId){
 
-                // remove filter
-                uninstallFilter(host, optionsFilterId.result);
+                    asyncTest(host, optionsFilterId.result, config.logs, function(){
+
+                        // remove filter
+                        uninstallFilter(host, optionsFilterId.result);
+
+                        done();
+                    });
+                });
             });
 
-            it('should return a list of logs, when filtering with defining an address and using toBlock "pending"', function(){
+            it('should return a list of logs, when filtering with defining an address and using toBlock "pending"', function(done){
                 // INSTALL a options filter first
-                var optionsFilterId = Helpers.send(host, {
+                Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
                     
                     // PARAMETERS
@@ -162,16 +192,21 @@ describe(method, function(){
                         'address': "0x"+ config.logs[0].tx.to
                     }]
 
-                });
-                syncTest(host, optionsFilterId.result, config.logs);
+                }, function(optionsFilterId){
 
-                // remove filter
-                uninstallFilter(host, optionsFilterId.result);
+                    asyncTest(host, optionsFilterId.result, config.logs, function(){
+
+                        // remove filter
+                        uninstallFilter(host, optionsFilterId.result);
+
+                        done();
+                    });
+                });
             });
 
-            it('should return a list of logs, when filtering by topic "0x0000000000000000000000000000000000000000000000000000000000000001"', function(){
+            it('should return a list of logs, when filtering by topic "0x0000000000000000000000000000000000000000000000000000000000000001"', function(done){
                 // INSTALL a options filter first
-                var optionsFilterId = Helpers.send(host, {
+                Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
                     
                     // PARAMETERS
@@ -181,22 +216,27 @@ describe(method, function(){
                         "topics": ['0x0000000000000000000000000000000000000000000000000000000000000001']
                     }]
 
+                }, function(optionsFilterId){
+
+                    // get only the logs which have true as the first index arg
+                    var newLogs = _.filter(config.logs, function(log){
+                        return (log.anonymous && log.indexArgs[0] === true);
+                    });
+
+                    asyncTest(host, optionsFilterId.result, newLogs, function(){
+
+                        // remove filter
+                        uninstallFilter(host, optionsFilterId.result);
+
+                        done();
+                    });
                 });
 
-                // get only the logs which have true as the first index arg
-                var newLogs = _.filter(config.logs, function(log){
-                    return (log.anonymous && log.indexArgs[0] === true);
-                });
-
-                syncTest(host, optionsFilterId.result, newLogs);
-
-                // remove filter
-                uninstallFilter(host, optionsFilterId.result);
             });
 
-            it('should return a list of anonymous logs, when filtering by topic "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"', function(){
+            it('should return a list of anonymous logs, when filtering by topic "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"', function(done){
                 // INSTALL a options filter first
-                var optionsFilterId = Helpers.send(host, {
+                Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
                     
                     // PARAMETERS
@@ -206,20 +246,25 @@ describe(method, function(){
                         "topics": [null, null, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff']
                     }]
 
+                }, function(optionsFilterId){
+
+                    // get only the logs which have true as the first index arg
+                    var newLogs = _.filter(config.logs, function(log){
+                        return (log.anonymous && log.indexArgs[2] === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+                    });
+
+                    asyncTest(host, optionsFilterId.result, newLogs, function(){
+
+                        // remove filter
+                        uninstallFilter(host, optionsFilterId.result);
+
+                        done();
+                    });
                 });
 
-                // get only the logs which have true as the first index arg
-                var newLogs = _.filter(config.logs, function(log){
-                    return (log.anonymous && log.indexArgs[2] === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-                });
-
-                syncTest(host, optionsFilterId.result, newLogs);
-
-                // remove filter
-                uninstallFilter(host, optionsFilterId.result);
             });
 
-            it('should return a list of logs, when filtering by topic "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"', function(){
+            it('should return a list of logs, when filtering by topic "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"', function(done){
                 // INSTALL a options filter first
                 var optionsFilterId = Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
@@ -231,17 +276,21 @@ describe(method, function(){
                         "topics": [null, null, null, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff']
                     }]
 
+                }, function(optionsFilterId){
+
+                    // get only the logs which have true as the first index arg
+                    var newLogs = _.filter(config.logs, function(log){
+                        return (!log.anonymous && log.indexArgs[2] === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+                    });
+
+                    asyncTest(host, optionsFilterId.result, newLogs, function(){
+
+                        // remove filter
+                        uninstallFilter(host, optionsFilterId.result);
+
+                        done();
+                    });
                 });
-
-                // get only the logs which have true as the first index arg
-                var newLogs = _.filter(config.logs, function(log){
-                    return (!log.anonymous && log.indexArgs[2] === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-                });
-
-                syncTest(host, optionsFilterId.result, newLogs);
-
-                // remove filter
-                uninstallFilter(host, optionsFilterId.result);
             });
 
 

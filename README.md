@@ -46,13 +46,27 @@ You can also run only tests for `eth_`, `shh_` or `net_` RPC methods as follows:
 
 If you don't want to run the tests against all nodes, or run against remote nodes, just change the `hosts` in the `lib/config.js`.
 
+
+### Running over an IPC connection
+
+To test using the IPC connection, your node needs to run on the default IPC path. Then start with the following:
+
+    $ make test.ipc
+    $ make test.eth.ipc
+    $ make test.shh.ipc
+    $ make test.net.ipc
+
 ### Running single tests
 
 To run a single test you need to install mocha globally:
 
-    $ npm install -g mocha
-    $ cd rpc-tests
-    $ mocha test/1_testConnection.js test/eth_myMethod.js
+```bash
+$ npm install -g mocha
+$ cd rpc-tests
+$ mocha test/1_testConnection.js test/eth_myMethod.js
+# add --ipc when you want to use the IPC connection
+$ mocha test/1_testConnection.js test/eth_myMethod.js --ipc
+```
 
 By changing the last file name to whatever method you want to test, you can run test only for that specifc method.
 

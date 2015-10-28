@@ -7,22 +7,23 @@ var method = 'db_getHex';
 
 
 // TEST
-var syncTest = function(host, params, expectedResult){
-    var result = Helpers.send(host, {
+var asyncTest = function(host, params, expectedResult, done){
+    Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
         
         // PARAMETERS
         params: params
 
+    }, function(result, status){
+
+        assert.property(result, 'result', (result.error) ? result.error.message : 'error');
+        assert.isString(result.result, 'is string');
+        assert.match(result.result, /^0x/, 'should be HEX starting with 0x');
+
+        assert.equal(result.result, expectedResult, 'should match '+ expectedResult);
+
+        done();
     });
-
-        
-    assert.property(result, 'result', (result.error) ? result.error.message : 'error');
-    assert.isString(result.result, 'is string');
-    assert.match(result.result, /^0x/, 'should be HEX starting with 0x');
-
-    assert.equal(result.result, expectedResult, 'should match '+ expectedResult);
-
 };
 
 
@@ -49,7 +50,7 @@ describe(method, function(){
 
     Helpers.eachHost(function(key, host){
         describe(key, function(){
-            it('should return the previously stored value', function(){
+            it('should return the previously stored value', function(done){
                 var randomHex = '0x'+ Math.random().toString().replace('.','').replace(/0/g,'');
 
                 if(randomHex.length % 2 !== 0)
@@ -60,17 +61,19 @@ describe(method, function(){
                     
                     // PARAMETERS
                     params: [
-                    'myDb',
-                    'myKey',
-                    randomHex
+                        'myDb',
+                        'myKey',
+                        randomHex
                     ]
 
+                }, function(result){
+                    
+                    asyncTest(host, [
+                        'myDb',
+                        'myKey'
+                        ], randomHex, done);
                 });
 
-                syncTest(host, [
-                    'myDb',
-                    'myKey'
-                    ], randomHex);
             });
 
             it('should return an error when no parameter is passed', function(done){
