@@ -8,28 +8,32 @@ return;
 // METHOD
 var method = 'eth_getFilterChanges',
     uninstallFilter = function(host, id) {
-        Helpers.send(host, {id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_uninstallFilter', params: [id] });
+        Helpers.send(host, {id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_uninstallFilter', params: [id] }, function(){});
     };
 
 // TEST
-var syncTest = function(host, filterId, logsInfo){
+var asyncTest = function(host, filterId, logsInfo, done){
 
-    var result = Helpers.send(host, {
+    Helpers.send(host, {
         id: config.rpcMessageId++, jsonrpc: "2.0", method: method,
         
         // PARAMETERS
         params: [filterId]
 
+    }, function(result, status){
+
+        // console.log(filterId, result.result);
+            
+        assert.property(result, 'result', (result.error) ? result.error.message : 'error');
+        assert.equal(result.result.length, logsInfo.length, 'logs should be '+ logsInfo.length);
+
+        _.each(result.result, function(log, index){
+            Helpers.logTest(log, logsInfo[index]);
+        });
+
+        done();
     });
 
-    // console.log(filterId, result.result);
-        
-    assert.property(result, 'result', (result.error) ? result.error.message : 'error');
-    assert.equal(result.result.length, logsInfo.length, 'logs should be '+ logsInfo.length);
-
-    _.each(result.result, function(log, index){
-        Helpers.logTest(log, logsInfo[index]);
-    });
 };
 
 var asyncErrorTest = function(host, done, param){
@@ -58,7 +62,7 @@ describe(method, function(){
         describe(key, function(){
 
             _.each(config.logs, function(log){
-                it('should return the correct log once after a transaction was send and when filtering without defining an address', function(){
+                it('should return the correct log once after a transaction was send and when filtering without defining an address', function(done){
                     // INSTALL a options filter first
                     var optionsFilterId = Helpers.send(host, {
                         id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
@@ -69,36 +73,48 @@ describe(method, function(){
                             "toBlock": Helpers.fromDecimal(log.block.blockHeader.number)
                         }]
 
+                    }, function(){
+
+                        syncTest(host, optionsFilterId.result, [], function(){
+
+                            // send transaction
+                            Helpers.send(host, {
+                                id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_sendTransaction',
+                                
+                                // PARAMETERS
+                                params: [{
+                                    "from": config.senderAddress,
+                                    "to": config.contractAddress,
+                                    "data": log.call,
+                                    "gas" : "0x4cb2f",
+                                    "gasPrice" : "0x1",
+                                }]
+
+                            }, function(){
+
+                                // MINE!
+
+                                syncTest(host, optionsFilterId.result, [log], function(){
+
+                                    syncTest(host, optionsFilterId.result, [], function(){
+
+                                        // remove filter
+                                        uninstallFilter(host, optionsFilterId.result);
+
+                                        done();
+                                    });
+                                });
+
+
+                            });
+
+                        });
+
                     });
 
-                    syncTest(host, optionsFilterId.result, []);
-
-                    // send transaction
-                    Helpers.send(host, {
-                        id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_sendTransaction',
-                        
-                        // PARAMETERS
-                        params: [{
-                            "from": config.senderAddress,
-                            "to": config.contractAddress,
-                            "data": log.call,
-                            "gas" : "0x4cb2f",
-                            "gasPrice" : "0x1",
-                        }]
-
-                    });
-
-                    // MINE!
-
-                    syncTest(host, optionsFilterId.result, [log]);
-
-                    syncTest(host, optionsFilterId.result, []);
-
-                    // remove filter
-                    uninstallFilter(host, optionsFilterId.result);
                 });
 
-                it('should return the correct log once after a transaction was send and when filtering with address', function(){
+                it('should return the correct log once after a transaction was send and when filtering with address', function(done){
                     // INSTALL a options filter first
                     var optionsFilterId = Helpers.send(host, {
                         id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
@@ -110,33 +126,45 @@ describe(method, function(){
                             "toBlock": Helpers.fromDecimal(log.block.blockHeader.number)
                         }]
 
+                    }, function(){
+
+                        syncTest(host, optionsFilterId.result, [], function(){
+
+                            // send transaction
+                            Helpers.send(host, {
+                                id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_sendTransaction',
+                                
+                                // PARAMETERS
+                                params: [{
+                                    "from": config.senderAddress,
+                                    "to": config.contractAddress,
+                                    "data": log.call,
+                                    "gas" : "0x4cb2f",
+                                    "gasPrice" : "0x1",
+                                }]
+
+                            }, function(){
+
+                                // MINE!
+
+                                syncTest(host, optionsFilterId.result, [log], function(){
+
+                                    syncTest(host, optionsFilterId.result, [], function(){
+
+                                        // remove filter
+                                        uninstallFilter(host, optionsFilterId.result);
+
+                                        done();
+                                    });
+
+                                });
+
+                            });
+
+                        });
+
                     });
 
-                    syncTest(host, optionsFilterId.result, []);
-
-                    // send transaction
-                    Helpers.send(host, {
-                        id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_sendTransaction',
-                        
-                        // PARAMETERS
-                        params: [{
-                            "from": config.senderAddress,
-                            "to": config.contractAddress,
-                            "data": log.call,
-                            "gas" : "0x4cb2f",
-                            "gasPrice" : "0x1",
-                        }]
-
-                    });
-
-                    // MINE!
-
-                    syncTest(host, optionsFilterId.result, [log]);
-
-                    syncTest(host, optionsFilterId.result, []);
-
-                    // remove filter
-                    uninstallFilter(host, optionsFilterId.result);
                 });
             });
 

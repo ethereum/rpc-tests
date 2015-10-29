@@ -5,8 +5,8 @@ var config = require('../lib/config'),
 
 // METHOD
 var method = 'eth_getFilterLogs',
-    uninstallFilter = function(host, id) {
-        Helpers.send(host, {id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_uninstallFilter', params: [id] }, function(){});
+    uninstallFilter = function(host, id, done) {
+        Helpers.send(host, {id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_uninstallFilter', params: [id] }, function(){ done(); });
     };
 
 // TEST
@@ -18,7 +18,7 @@ var asyncTest = function(host, filterId, logsInfo, done){
         // PARAMETERS
         params: [filterId]
 
-    }, function(result, status){
+    }, function(result, status){        
 
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
         assert.equal(result.result.length, logsInfo.length, 'logs should be '+ logsInfo.length);
@@ -74,9 +74,7 @@ describe(method, function(){
                         asyncTest(host, optionsFilterId.result, [log], function(){
 
                             // remove filter
-                            uninstallFilter(host, optionsFilterId.result);
-
-                            done();
+                            uninstallFilter(host, optionsFilterId.result, done);
                         });
                     });
 
@@ -100,9 +98,7 @@ describe(method, function(){
                         asyncTest(host, optionsFilterId.result, [log], function(){
 
                             // remove filter
-                            uninstallFilter(host, optionsFilterId.result);
-
-                            done();
+                            uninstallFilter(host, optionsFilterId.result, done);
                         });
 
                     });
@@ -126,9 +122,7 @@ describe(method, function(){
                     asyncTest(host, optionsFilterId.result, config.logs, function(){
 
                         // remove filter
-                        uninstallFilter(host, optionsFilterId.result);
-
-                        done();
+                        uninstallFilter(host, optionsFilterId.result, done);
                     });
                 });
             });
@@ -149,9 +143,7 @@ describe(method, function(){
                     asyncTest(host, optionsFilterId.result, config.logs, function(){
 
                         // remove filter
-                        uninstallFilter(host, optionsFilterId.result);
-
-                        done();
+                        uninstallFilter(host, optionsFilterId.result, done);
                     });
                 });
             });
@@ -173,14 +165,14 @@ describe(method, function(){
                     asyncTest(host, optionsFilterId.result, config.logs, function(){
 
                         // remove filter
-                        uninstallFilter(host, optionsFilterId.result);
-
-                        done();
+                        uninstallFilter(host, optionsFilterId.result, done);
                     });
                 });
             });
 
             it('should return a list of logs, when filtering with defining an address and using toBlock "pending"', function(done){
+                
+
                 // INSTALL a options filter first
                 Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
@@ -194,12 +186,10 @@ describe(method, function(){
 
                 }, function(optionsFilterId){
 
-                    asyncTest(host, optionsFilterId.result, config.logs, function(){
+                    asyncTest(host, optionsFilterId.result, config.logs, function(result){
 
                         // remove filter
-                        uninstallFilter(host, optionsFilterId.result);
-
-                        done();
+                        uninstallFilter(host, optionsFilterId.result, done);
                     });
                 });
             });
@@ -226,9 +216,7 @@ describe(method, function(){
                     asyncTest(host, optionsFilterId.result, newLogs, function(){
 
                         // remove filter
-                        uninstallFilter(host, optionsFilterId.result);
-
-                        done();
+                        uninstallFilter(host, optionsFilterId.result, done);
                     });
                 });
 
@@ -256,9 +244,8 @@ describe(method, function(){
                     asyncTest(host, optionsFilterId.result, newLogs, function(){
 
                         // remove filter
-                        uninstallFilter(host, optionsFilterId.result);
+                        uninstallFilter(host, optionsFilterId.result, done);
 
-                        done();
                     });
                 });
 
@@ -266,7 +253,7 @@ describe(method, function(){
 
             it('should return a list of logs, when filtering by topic "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"', function(done){
                 // INSTALL a options filter first
-                var optionsFilterId = Helpers.send(host, {
+                Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
                     
                     // PARAMETERS
@@ -286,9 +273,7 @@ describe(method, function(){
                     asyncTest(host, optionsFilterId.result, newLogs, function(){
 
                         // remove filter
-                        uninstallFilter(host, optionsFilterId.result);
-
-                        done();
+                        uninstallFilter(host, optionsFilterId.result, done);
                     });
                 });
             });
