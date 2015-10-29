@@ -52,22 +52,24 @@ describe(method, function(){
             // BLOCK FILTER
             it('should return a boolean when uninstalling a block filter', function(done){
                 // INSTALL a block filter first
-                var blockFilterId = Helpers.send(host, {
+                Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newBlockFilter',
                     
                     // PARAMETERS
                     params: ['latest']
 
+                }, function(blockFilterId){
+
+                    asyncTest(host, done, blockFilterId.result);
                 });
 
-                asyncTest(host, done, blockFilterId.result);
             });
 
 
             // OPTIONS FILTER
             it('should return a boolean when uninstalling a options filter', function(done){
                 // INSTALL a options filter first
-                var optionsFilterId = Helpers.send(host, {
+                Helpers.send(host, {
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newFilter',
                     
                     // PARAMETERS
@@ -78,9 +80,10 @@ describe(method, function(){
                         "topics": ['0x01e0aa27e54970936aa910a713', '0x6aa910a7186fdf']
                     }]
 
+                }, function(optionsFilterId) {
+                    asyncTest(host, done, optionsFilterId.result);
                 });
 
-                asyncTest(host, done, optionsFilterId.result);
             });
 
             it('should return an error when no parameter is passed', function(done){

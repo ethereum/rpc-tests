@@ -63,6 +63,8 @@ describe(method, function(){
                         // PARAMETERS
                         params: [currentFilterId]
 
+                    }, function(){
+                        
                     });
                     currentFilterId = null;
                 }

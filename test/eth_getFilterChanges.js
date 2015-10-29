@@ -75,7 +75,7 @@ describe(method, function(){
 
                     }, function(){
 
-                        syncTest(host, optionsFilterId.result, [], function(){
+                        asyncTest(host, optionsFilterId.result, [], function(){
 
                             // send transaction
                             Helpers.send(host, {
@@ -128,7 +128,7 @@ describe(method, function(){
 
                     }, function(){
 
-                        syncTest(host, optionsFilterId.result, [], function(){
+                        asyncTest(host, optionsFilterId.result, [], function(){
 
                             // send transaction
                             Helpers.send(host, {

@@ -18,7 +18,7 @@ var asyncTest = function(host, filterId, logsInfo, done){
         // PARAMETERS
         params: [filterId]
 
-    }, function(result, status){        
+    }, function(result, status){
 
         assert.property(result, 'result', (result.error) ? result.error.message : 'error');
         assert.equal(result.result.length, logsInfo.length, 'logs should be '+ logsInfo.length);
