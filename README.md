@@ -80,10 +80,9 @@ To load a fixed state, clone the ethereum test repo as follows:
 
 Run the following go cli command to load the `RPC_API_Test` test:
 
-    $ geth --shh blocktest <pathToTheTestRepo>/lib/tests/BlockchainTests/bcRPC_API_Test.json RPC_API_Test rpc
+    $ gethrpctest --json <pathToTheTestRepo>/lib/tests/BlockchainTests/bcRPC_API_Test.json --test RPC_API_Test
 
 #### C++
-
 
 Run the following c++ cli command to load the `RPC_API_Test` test:
 
