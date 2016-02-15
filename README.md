@@ -94,6 +94,10 @@ Run the following python cli command to load the `RPC_API_Test` test:
 
     $ pyethapp -l :info,eth.chainservice:debug,jsonrpc:debug -c jsonrpc.listen_port=8081 -c p2p.max_peers=0 -c p2p.min_peers=0 blocktest <pathToTheTestRepo>/lib/tests/BlockchainTests/bcRPC_API_Test.json RPC_API_Test
 
+For also testing/using ipc, use the the following command:
+
+    $ pyethapp -l :info,eth.chainservice:debug,jsonrpc:debug -c jsonrpc.listen_port=8081 -c p2p.max_peers=0 -c p2p.min_peers=0 -c ipc.ipcpath=$HOME/.ethereum/geth.ipc blocktest <pathToTheTestRepo>/lib/tests/BlockchainTests/bcRPC_API_Test.json RPC_API_Test
+    
 ## License
 
 The MIT License
