@@ -56,7 +56,7 @@ describe(method, function(){
                     id: config.rpcMessageId++, jsonrpc: "2.0", method: 'eth_newBlockFilter',
                     
                     // PARAMETERS
-                    params: ['latest']
+                    params: []
 
                 }, function(blockFilterId){
 
